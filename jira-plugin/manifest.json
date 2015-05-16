@@ -1,0 +1,38 @@
+{
+  "name": "Jira HotLinker",
+  "version": "1",
+  "manifest_version": 2,
+  "description": "Hotlinks jira links",
+  "icons": {
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://github.com/*"
+      ],
+      "run_at": "document_end",
+      "css": [
+        "src/content.css"
+      ],
+      "js": [
+        "src/vendor/jquery-2.1.4.min.js",
+        "src/vendor/lodash.min.js",
+        "src/vendor/bluebird.min.js",
+        "src/content.js"
+
+      ]
+    }
+  ],
+  "web_accessible_resources": [
+    "resources/*"
+  ],
+  "permissions": [
+    "storage",
+    "cookies",
+    "tabs"
+  ],
+  "options_ui": {
+    "page": "options/options.html",
+    "chrome_style" : true
+  }
+}
