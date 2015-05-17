@@ -13,8 +13,8 @@
             </thead>
             <% _.forEach(prs, function(pr) {%>
             <tr>
-                <td><a href="<%- pr.href %>"><%- pr.id %></a></td>
-                <td><a href="<%- pr.href %>"><%- pr.name%></a></td>
+                <td><a href="<%- pr.url %>"><%- pr.id %></a></td>
+                <td><a href="<%- pr.url %>"><%- pr.name%></a></td>
                 <td><img class="_JX_avatar" title="<%- pr.author.name %>" src="<%- pr.author.avatar %>"></td>
                 <td>
                     <div class="_JX_PR_STATUS _JX_PR_<%- pr.status %>"><%- pr.status %></div>
