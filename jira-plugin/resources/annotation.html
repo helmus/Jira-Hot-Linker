@@ -1,0 +1,41 @@
+<div class="_JX_annotation">
+    <div class="_JX_title">
+        <a href="<%- url %>"><%- urlTitle %></a>
+    </div>
+    <% if (_.size(prs)){ %>
+    <div class="_JX_related_pr">
+        <table>
+            <thead>
+            <td>#</td>
+            <td>title</td>
+            <td>author</td>
+            <td>status</td>
+            </thead>
+            <% _.forEach(prs, function(pr) {%>
+            <tr>
+                <td><a href="<%- pr.href %>"><%- pr.id %></a></td>
+                <td><a href="<%- pr.href %>"><%- pr.name%></a></td>
+                <td><img class="_JX_avatar" title="<%- pr.author.name %>" src="<%- pr.author.avatar %>"></td>
+                <td>
+                    <div class="_JX_PR_STATUS _JX_PR_<%- pr.status %>"><%- pr.status %></div>
+                </td>
+            </tr>
+            <% });%>
+        </table>
+    </div>
+    <% } %>
+    <div class="_JX_description">
+        <div><%= description %></div>
+    </div>
+    <% if (_.size(attachments)){ %>
+    <div class="_JX_attachments">
+        <% _.forEach(attachments, function(attach) { %>
+        <div data-url="<%- attach.content %>"  class="_JX_thumb">
+            <img title="<%- attach.filename %>" src="<%- attach.thumbnail %>">
+            <div class="_JX_thumb_filename"><%- attach.filename %></div>
+            <img class="_JX_file_loader" src="<%- loaderGifUrl %>">
+        </div>
+        <% });%>
+    </div>
+    <% } %>
+</div>

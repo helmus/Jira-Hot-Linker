@@ -1,0 +1,130 @@
+._JX_container {
+    position: absolute;
+}
+
+._JX_annotation {
+    max-width: 500px;
+    border: 1px solid #dde4e6;
+    border-radius: 3px;
+    background-color: white;
+    box-shadow: 2px 2px 6px rgb(162, 183, 189);
+}
+
+._JX_title {
+    background-color: #F2F8FA;
+    border-bottom: 1px solid #dde4e6;
+    padding: 10px;
+}
+
+._JX_annotation:after, ._JX_annotation:before {
+    bottom: calc(100% - 1px);
+    left: 40px;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+    z-index: 5;
+}
+
+._JX_annotation:after {
+    border-color: rgba(242, 248, 250, 0);
+    border-bottom-color: #F2F8FA;
+    border-width: 10px;
+}
+
+._JX_annotation:before {
+    border-color: rgba(221, 228, 230, 0);
+    border-bottom-color: #dde4e6;
+    border-width: 11px;
+    margin-left: -1px;
+}
+
+._JX_related_pr td {
+    padding: 10px;
+    border-bottom: 1px solid #dde4e6;
+}
+
+._JX_related_pr table {
+    width: 100%;
+}
+
+._JX_related_pr thead td {
+    border-bottom: 1px solid #dde4e6;
+    text-transform: capitalize;
+    font-weight: bold;
+}
+
+._JX_description {
+    border-bottom: 1px solid #dde4e6;
+    padding: 10px;
+}
+
+._JX_avatar {
+    width: 20px;
+    height: 20px;
+}
+
+._JX_PR_STATUS {
+    border: 1px solid #a5b3c2;
+    border-radius: 3px;
+    display: inline-block;
+    font-size: 11px;
+    font-weight: bold;
+    line-height: 100%;
+    margin: 0;
+    padding: 2px 5px;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+._JX_PR_OPEN {
+    background-color: #fff;
+    color: #4a6785;
+}
+
+._JX_PR_MERGED {
+    border-color: #60b070;
+    color: #14892c;
+}
+
+._JX_PR_DECLINED {
+    border-color: #e8a29b;
+    color: #d04437;
+}
+
+._JX_attachments {
+    overflow: hidden;
+    padding: 5px;
+}
+
+._JX_thumb {
+    float: left;
+    margin: 5px;
+    border: 1px solid rgb(221, 228, 230);
+    cursor: pointer;
+    height: 145px;
+    width: 200px;
+    position: relative;
+}
+
+._JX_thumb_filename {
+    position: absolute;
+    white-space: nowrap;
+    width: 200px;
+    background-color: white;
+    max-height: 20px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    bottom: 2px;
+    padding-left: 2px;
+}
+
+._JX_file_loader {
+    display: none;
+    top: 23%;
+    left: 35%;
+    position: absolute;
+}
