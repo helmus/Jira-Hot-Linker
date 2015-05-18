@@ -12,7 +12,7 @@ A simple Chrome plugin that will show Jira metadata when hovering over a Jira is
 ###Installation
 - Download or clone this repo.  
 - Go To  [chrome://extensions](chrome://extensions) 
-- Tag the "Developer node..." checkbox
+- Tag the "Developer mode..." checkbox
 - Select "Load unpacked extensions..." 
 - point chrome to the jira-plugin folder inside the git repo ( not the root folder )
 - Profit
