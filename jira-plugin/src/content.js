@@ -117,8 +117,10 @@
      * @param node
      */
     function getShallowText(node) {
+      var TEXT_NODE = 3;
       return $(node).contents().filter(function (i, n) {
-        return n.nodeType === 3;
+        //TODO, not specific enough, need to evaluate getBoundingClientRect
+        return n.nodeType === TEXT_NODE;
       }).text();
     }
 
@@ -168,6 +170,7 @@
     }
 
     $(document.body).on('keydown', function (e) {
+      // TODO: escape not captured in google docs
       var ESCAPE_KEY_CODE = 27;
       if (e.keyCode == ESCAPE_KEY_CODE) {
         hideContainer();
@@ -226,6 +229,7 @@
                 }
               });
             }
+            // TODO: fix scrolling in google docs
             var css = {
               left: e.pageX - 30,
               top: e.pageY + 35

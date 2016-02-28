@@ -1,1 +1,4 @@
 .idea/workspace.xml
+.test.swp
+*.swp
+*.zip

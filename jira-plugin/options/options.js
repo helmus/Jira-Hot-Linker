@@ -1,3 +1,10 @@
+var errorText = document.createElement("div");
+document.body.appendChild(errorText)
+window.onerror = function (msg, file, line, column, error) {
+  errorText.innerHTML = error.stack;
+}
+
+console.log('hello options')
 function save_options() {
   var instanceUrl = document.getElementById('instanceUrl').value;
   chrome.storage.sync.set({

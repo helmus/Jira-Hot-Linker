@@ -1,5 +1,6 @@
 ._JX_container {
     position: absolute;
+    z-index: 99999;
 }
 
 ._JX_annotation {
@@ -58,6 +59,7 @@
 
 ._JX_description {
     border-bottom: 1px solid #dde4e6;
+    word-wrap: break-word;
     padding: 10px;
 }
 
