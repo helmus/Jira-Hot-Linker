@@ -3,16 +3,13 @@
 
 A simple Chrome plugin that will show Jira metadata when hovering over a Jira issue key on github.
 
+Now available trough Chrome Store !  
+https://chrome.google.com/webstore/detail/jira-hotlinker/lbifpcpomdegljfpfhgfcjdabbeallhk?authuser=1
+
+Make sure to configure your Jira instance url in the settings after installing !
+
 ###Features
 - Title and link to Jira
 - Related pull requests
 - Descriptions
 - Attachments
-
-###Installation
-- Download or clone this repo.  
-- Go To  [chrome://extensions](chrome://extensions) 
-- Tag the "Developer mode..." checkbox
-- Select "Load unpacked extensions..." 
-- point chrome to the jira-plugin folder inside the git repo ( not the root folder )
-- Profit
