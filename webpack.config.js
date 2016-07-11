@@ -1,6 +1,6 @@
 module.exports = {
   devtool: 'eval-source-map',
-  entry: ['babel-polyfill', './jira-plugin/src/content.jsx'],
+  entry: './jira-plugin/src/content.jsx',
   output: {
     path: './jira-plugin/build',
     filename: 'main.js',
@@ -13,15 +13,15 @@ module.exports = {
       exclude: './node_modules',
       query: {
         cacheDirectory: true,
-        presets: ['es2015-loose', 'react'],
+        presets: ['es2015-loose', 'es2015-native-generators', 'react'],
         plugins: [
-          "transform-object-assign",
-          "transform-proto-to-assign"
+          'transform-object-assign',
+          'transform-proto-to-assign'
         ]
       }
     }]
   },
   resolve: {
-    extensions: ["", ".webpack.js", ".web.js", ".js", "jsx"]
+    extensions: ['', '.webpack.js', '.web.js', '.js', 'jsx']
   }
 };

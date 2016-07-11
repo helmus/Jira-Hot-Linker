@@ -4,7 +4,6 @@ window.onerror = function (msg, file, line, column, error) {
   errorText.innerHTML = error.stack;
 }
 
-console.log('hello options')
 function save_options() {
   var instanceUrl = document.getElementById('instanceUrl').value;
   chrome.storage.sync.set({
@@ -31,5 +30,4 @@ function restore_options() {
 }
 
 document.addEventListener('DOMContentLoaded', restore_options);
-document.getElementById('save').addEventListener('click',
-  save_options);
+document.getElementById('save').addEventListener('click', save_options);

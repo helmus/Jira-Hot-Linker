@@ -1,37 +1,14 @@
-import $ from 'jquery'
-import _ from 'lodash'
-import Promise from 'bluebird'
+import $ from 'jquery';
+import _ from 'lodash';
+import Promise from 'bluebird';
+import {storageSet, storageGet} from './chrome'
+import {centerPopup} from './utils'
 
 var INSTANCE_URL = ''; // will be set asynchronously
 var async = Promise.coroutine;
 
-/**
- * transform chrome callback style functions to return promises
- * @param context
- * @param funcName
- * @returns {*|n}
- */
-function promisfyChromeAsync(context, funcName) {
-  return function promisfyForward() {
-    var forwardedArgs = _.toArray(arguments);
-    return new Promise(function (resolve, reject) {
-      forwardedArgs.push(function () {
-        if (chrome.runtime.lastError) {
-          reject(chrome.runtime.lastError);
-          return;
-        }
-        resolve.apply(this, arguments);
-      });
-      context[funcName].apply(context, forwardedArgs);
-    });
-  }
-}
-
-chrome.storage.sync.getP = promisfyChromeAsync(chrome.storage.sync, 'get');
-chrome.storage.sync.setP = promisfyChromeAsync(chrome.storage.sync, 'set');
-
 function getInstanceUrl() {
-  return chrome.storage.sync.getP({
+  return storageGet({
     instanceUrl: 'https://origamilogic.atlassian.net/'
   }).then(function (result) {
     return result.instanceUrl;
@@ -39,13 +16,13 @@ function getInstanceUrl() {
 }
 
 var getJiraProjects = async(function *() {
-  var jiraProjects = (yield chrome.storage.sync.getP(['jiraProjects'])).jiraProjects;
+  var jiraProjects = (yield storageGet(['jiraProjects'])).jiraProjects;
   if (!_.size(jiraProjects)) {
     jiraProjects = yield $.get(INSTANCE_URL + 'rest/api/2/project');
     if (!_.size(jiraProjects)) {
       return [];
     }
-    yield chrome.storage.sync.setP({
+    yield storageSet({
       jiraProjects: jiraProjects
     });
   }
@@ -67,35 +44,7 @@ function buildJiraKeyMatcher(projectKeys) {
       result.push(matches[0]);
     }
     return result;
-  }
-}
-
-function getCenter(width, heigth) {
-  var totalScreenLeft = window.screenLeft !== undefined ? window.screenLeft : screen.left;
-  var totalScreenRight = window.screenTop !== undefined ? window.screenTop : screen.top;
-  var screenWidth = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
-  var screenHeight = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
-  var left = ((screenWidth / 2) - (width / 2)) + totalScreenLeft;
-  var top = ((screenHeight / 2) - (heigth / 2)) + totalScreenRight;
-  return {
-    left: left,
-    top: top
   };
-}
-
-function toOptionsString(options) {
-  return _.map(options, function (value, key) {
-    return key + '=' + value;
-  }).join(', ');
-}
-
-function centerPopup(url, title, options) {
-  options = _.defaults(options || {}, {
-    width: 800,
-    height: 600
-  });
-  options = _.defaults(options, getCenter(options.width, options.height));
-  return window.open(url, title, toOptionsString(options));
 }
 
 async(function * mainAsyncLocal() {
@@ -173,7 +122,7 @@ async(function * mainAsyncLocal() {
   $(document.body).on('keydown', function (e) {
     // TODO: escape not captured in google docs
     var ESCAPE_KEY_CODE = 27;
-    if (e.keyCode == ESCAPE_KEY_CODE) {
+    if (e.keyCode === ESCAPE_KEY_CODE) {
       hideContainer();
       passiveCancel(200);
     }
@@ -227,7 +176,7 @@ async(function * mainAsyncLocal() {
                 name: pr.name,
                 status: pr.status,
                 author: pr.author
-              }
+              };
             });
           }
           // TODO: fix scrolling in google docs
