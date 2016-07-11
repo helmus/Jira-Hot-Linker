@@ -2,3 +2,6 @@
 .test.swp
 *.swp
 *.zip
+node_modules/
+jira-plugin/build/
+jira-plugin/assets/

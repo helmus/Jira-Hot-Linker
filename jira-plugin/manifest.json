@@ -18,11 +18,7 @@
         "src/content.css"
       ],
       "js": [
-        "src/vendor/jquery-2.1.4.min.js",
-        "src/vendor/lodash.min.js",
-        "src/vendor/bluebird.min.js",
-        "src/content.js"
-
+        "build/main.js"
       ]
     }
   ],
@@ -35,6 +31,6 @@
   ],
   "options_ui": {
     "page": "options/options.html",
-    "chrome_style" : true
+    "chrome_style": true
   }
 }
