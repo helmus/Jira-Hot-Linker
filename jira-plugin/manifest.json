@@ -11,7 +11,8 @@
       "matches": [
         "*://github.com/*",
         "*://*.atlassian.net/rest/*",
-        "*://docs.google.com/*"
+        "*://docs.google.com/*",
+        "*://jenkins.origami42.com/*"
       ],
       "run_at": "document_end",
       "css": [

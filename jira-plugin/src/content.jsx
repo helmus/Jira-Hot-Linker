@@ -4,7 +4,6 @@ import Promise from 'bluebird';
 import {storageSet, storageGet} from './chrome'
 import {centerPopup} from './utils'
 
-var INSTANCE_URL = ''; // will be set asynchronously
 var async = Promise.coroutine;
 
 function getInstanceUrl() {
@@ -18,7 +17,7 @@ function getInstanceUrl() {
 var getJiraProjects = async(function *() {
   var jiraProjects = (yield storageGet(['jiraProjects'])).jiraProjects;
   if (!_.size(jiraProjects)) {
-    jiraProjects = yield $.get(INSTANCE_URL + 'rest/api/2/project');
+    jiraProjects = yield $.get(yield getInstanceUrl() + 'rest/api/2/project');
     if (!_.size(jiraProjects)) {
       return [];
     }
@@ -48,7 +47,7 @@ function buildJiraKeyMatcher(projectKeys) {
 }
 
 async(function * mainAsyncLocal() {
-  INSTANCE_URL = yield getInstanceUrl();
+  var INSTANCE_URL = yield getInstanceUrl();
   var jiraProjects = yield getJiraProjects();
 
   if (!_.size(jiraProjects)) {

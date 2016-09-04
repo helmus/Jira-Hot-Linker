@@ -13,7 +13,7 @@ function getCenter(width, heigth) {
   };
 }
 
-export function toOptionsString(options) {
+function toOptionsString(options) {
   debugger;
   return _.map(options, function (value, key) {
     return key + '=' + value;
