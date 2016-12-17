@@ -2,6 +2,7 @@ import $ from 'jquery';
 import size from 'lodash/size';
 import debounce from 'lodash/debounce';
 import template from 'lodash/template';
+import forEach from 'lodash/forEach';
 import {storageSet, storageGet} from './chrome';
 import {centerPopup} from './utils';
 
@@ -159,12 +160,14 @@ function buildJiraKeyMatcher(projectKeys) {
             return;
           }
           const displayData = {
-            loaderGifUrl: loaderGifUrl,
             urlTitle: issueData.fields.summary,
             url: INSTANCE_URL + 'browse/' + key,
             prs: [],
             description: issueData.renderedFields.description,
-            attachments: issueData.fields.attachment
+            attachments: issueData.fields.attachment,
+            loaderGifUrl,
+            size,
+            forEach
           };
           if (size(prData.detail)) {
             displayData.prs = prData.detail[0].pullRequests.filter(function (pr) {

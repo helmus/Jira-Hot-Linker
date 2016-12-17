@@ -1,3 +1,6 @@
+/* eslint-env node */
+const path = require('path');
+
 module.exports = {
   devtool: 'eval-source-map',
   entry: './jira-plugin/src/content.jsx',
@@ -7,27 +10,20 @@ module.exports = {
     pathinfo: true
   },
   module: {
-    loaders: [{
-      test: /\.(js|jsx)$/,
-      loader: 'babel',
-      exclude: './node_modules',
-      query: {
-        cacheDirectory: true,
-        presets: [
-          ['env', {
-            'targets': {
-              'chrome': 55
-            },
-            'modules': false
-          }]
-        ],
-        plugins: [
-          'transform-object-assign'
+    rules: [
+      {
+        test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
+        use: [
+          'babel-loader'
         ]
       }
-    }]
+    ]
   },
   resolve: {
-    extensions: ['', '.webpack.js', '.web.js', '.js', 'jsx']
+    modules: [
+      path.resolve(__dirname, 'node_modules')
+    ],
+    extensions: ['.webpack-loader.js', '.web-loader.js', '.loader.js', '.js', '.jsx'],
   }
 };
