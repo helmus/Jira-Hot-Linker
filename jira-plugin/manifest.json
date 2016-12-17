@@ -1,12 +1,12 @@
 {
   "name": "Jira HotLinker",
   "description": "Jira HotLinker, quick access to Jira metadata when hovering over ticket numbers!",
-  "version": "1.2",
+  "version": "1.3",
   "manifest_version": 2,
   "icons": {
     "128": "icons/jiralink128.png"
   },
-  "minimum_chrome_version": 55,
+  "minimum_chrome_version": "55",
   "content_scripts": [
     {
       "matches": [
@@ -16,9 +16,6 @@
         "*://jenkins.origami42.com/*"
       ],
       "run_at": "document_end",
-      "css": [
-        "src/content.css"
-      ],
       "js": [
         "build/main.js"
       ]

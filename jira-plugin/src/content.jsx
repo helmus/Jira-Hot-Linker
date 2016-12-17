@@ -5,14 +5,11 @@ import template from 'lodash/template';
 import forEach from 'lodash/forEach';
 import {storageSet, storageGet} from './chrome';
 import {centerPopup} from './utils';
+import './content.scss';
 
-function getInstanceUrl() {
-  return storageGet({
-    instanceUrl: 'https://origamilogic.atlassian.net/'
-  }).then(function (result) {
-    return result.instanceUrl;
-  });
-}
+const getInstanceUrl = async() => (await storageGet({
+  instanceUrl: 'https://origamilogic.atlassian.net/'
+})).instanceUrl;
 
 const getJiraProjects = async function () {
   let jiraProjects = (await storageGet(['jiraProjects'])).jiraProjects;

@@ -1,30 +1,32 @@
-import _ from 'lodash';
+import map from 'lodash/map';
+import defaults from 'lodash/defaults';
 
 function getCenter(width, heigth) {
-  var totalScreenLeft = window.screenLeft !== undefined ? window.screenLeft : screen.left;
-  var totalScreenRight = window.screenTop !== undefined ? window.screenTop : screen.top;
-  var screenWidth = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
-  var screenHeight = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
-  var left = ((screenWidth / 2) - (width / 2)) + totalScreenLeft;
-  var top = ((screenHeight / 2) - (heigth / 2)) + totalScreenRight;
+  const totalScreenLeft = window.screenLeft !== undefined ? window.screenLeft : screen.left;
+  const totalScreenRight = window.screenTop !== undefined ? window.screenTop : screen.top;
+  const screenWidth = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
+  const screenHeight = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
   return {
-    left: left,
-    top: top
+    left: ((screenWidth / 2) - (width / 2)) + totalScreenLeft,
+    top: ((screenHeight / 2) - (heigth / 2)) + totalScreenRight
   };
 }
 
 function toOptionsString(options) {
-  debugger;
-  return _.map(options, function (value, key) {
+  return map(options, (value, key) => {
     return key + '=' + value;
   }).join(', ');
 }
 
 export function centerPopup(url, title, options) {
-  options = _.defaults(options || {}, {
+  options = {
     width: 800,
-    height: 600
-  });
-  options = _.defaults(options, getCenter(options.width, options.height));
-  return window.open(url, title, toOptionsString(options));
+    height: 600,
+    ...options
+  };
+  return window.open(
+    url,
+    title,
+    toOptionsString(defaults(options, getCenter(options.width, options.height)))
+  );
 }

@@ -8,8 +8,7 @@
         },
         "modules": false,
         "loose": true,
-        "useBuiltIns": true,
-        "include": []
+        "useBuiltIns": true
       }
     ]
   ],
