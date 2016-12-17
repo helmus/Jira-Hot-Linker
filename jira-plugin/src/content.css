@@ -63,6 +63,11 @@
     padding: 10px;
 }
 
+._JX_description ol, ._JX_description ul {
+    padding-left: 15px;
+    margin-bottom: 15px;
+}
+
 ._JX_avatar {
     width: 20px;
     height: 20px;

@@ -1,10 +1,9 @@
 import $ from 'jquery';
-import _ from 'lodash';
-import Promise from 'bluebird';
-import {storageSet, storageGet} from './chrome'
-import {centerPopup} from './utils'
-
-var async = Promise.coroutine;
+import size from 'lodash/size';
+import debounce from 'lodash/debounce';
+import template from 'lodash/template';
+import {storageSet, storageGet} from './chrome';
+import {centerPopup} from './utils';
 
 function getInstanceUrl() {
   return storageGet({
@@ -14,19 +13,19 @@ function getInstanceUrl() {
   });
 }
 
-var getJiraProjects = async(function *() {
-  var jiraProjects = (yield storageGet(['jiraProjects'])).jiraProjects;
-  if (!_.size(jiraProjects)) {
-    jiraProjects = yield $.get(yield getInstanceUrl() + 'rest/api/2/project');
-    if (!_.size(jiraProjects)) {
+const getJiraProjects = async function () {
+  let jiraProjects = (await storageGet(['jiraProjects'])).jiraProjects;
+  if (!size(jiraProjects)) {
+    jiraProjects = await $.get(await getInstanceUrl() + 'rest/api/2/project');
+    if (!size(jiraProjects)) {
       return [];
     }
-    yield storageSet({
+    await storageSet({
       jiraProjects: jiraProjects
     });
   }
   return jiraProjects;
-});
+};
 
 /**
  * Returns a function that will return an array of jira tickets for any given string
@@ -34,11 +33,13 @@ var getJiraProjects = async(function *() {
  * @returns {Function}
  */
 function buildJiraKeyMatcher(projectKeys) {
-  var projectMatches = projectKeys.join('|');
-  var jiraTicketRegex = new RegExp('(?:' + projectMatches + ')-\\d*', 'ig');
+  const projectMatches = projectKeys.join('|');
+  const jiraTicketRegex = new RegExp('(?:' + projectMatches + ')-\\d*', 'ig');
 
   return function (text) {
-    var matches, result = [];
+    let matches;
+    const result = [];
+
     while ((matches = jiraTicketRegex.exec(text)) !== null) {
       result.push(matches[0]);
     }
@@ -46,27 +47,27 @@ function buildJiraKeyMatcher(projectKeys) {
   };
 }
 
-async(function * mainAsyncLocal() {
-  var INSTANCE_URL = yield getInstanceUrl();
-  var jiraProjects = yield getJiraProjects();
+(async function mainAsyncLocal() {
+  const INSTANCE_URL = await getInstanceUrl();
+  const jiraProjects = await getJiraProjects();
 
-  if (!_.size(jiraProjects)) {
+  if (!size(jiraProjects)) {
     console.log('Couldn\'t find any jira projects...');
     return;
   }
-  var getJiraKeys = buildJiraKeyMatcher(jiraProjects.map(function (project) {
+  const getJiraKeys = buildJiraKeyMatcher(jiraProjects.map(function (project) {
     return project.key;
   }));
 
-  var annotation = _.template(yield $.get(chrome.extension.getURL('resources/annotation.html')));
-  var loaderGifUrl = chrome.extension.getURL('resources/ajax-loader.gif');
+  const annotation = template(await $.get(chrome.extension.getURL('resources/annotation.html')));
+  const loaderGifUrl = chrome.extension.getURL('resources/ajax-loader.gif');
 
   /***
    * Retrieve only the text that is directly owned by the node
    * @param node
    */
   function getShallowText(node) {
-    var TEXT_NODE = 3;
+    const TEXT_NODE = 3;
     return $(node).contents().filter(function (i, n) {
       //TODO, not specific enough, need to evaluate getBoundingClientRect
       return n.nodeType === TEXT_NODE;
@@ -81,20 +82,20 @@ async(function * mainAsyncLocal() {
     return $.get(INSTANCE_URL + 'rest/api/2/issue/' + issueKey + '?fields=description,id,summary,attachment,comment&expand=renderedFields');
   }
 
-  var container = $('<div class="_JX_container">');
+  const container = $('<div class="_JX_container">');
   $(document.body).append(container);
 
   $(document.body).on('click', '._JX_thumb', function previewThumb(e) {
-    var currentTarget = $(e.currentTarget);
+    const currentTarget = $(e.currentTarget);
     if (currentTarget.data('_JX_loading')) {
       return;
     }
     currentTarget.data('loading', true);
-    var opacityElements = currentTarget.children(':not(._JX_file_loader)');
+    const opacityElements = currentTarget.children(':not(._JX_file_loader)');
     opacityElements.css('opacity', 0.2);
     currentTarget.find('._JX_file_loader').show();
-    var localCancelToken = cancelToken;
-    var img = new Image();
+    const localCancelToken = cancelToken;
+    const img = new Image();
     img.onload = function () {
       currentTarget.data('_JX_loading', false);
       currentTarget.find('._JX_file_loader').hide();
@@ -120,14 +121,14 @@ async(function * mainAsyncLocal() {
 
   $(document.body).on('keydown', function (e) {
     // TODO: escape not captured in google docs
-    var ESCAPE_KEY_CODE = 27;
+    const ESCAPE_KEY_CODE = 27;
     if (e.keyCode === ESCAPE_KEY_CODE) {
       hideContainer();
       passiveCancel(200);
     }
   });
 
-  var cancelToken = {};
+  let cancelToken = {};
 
   function passiveCancel(cooldown) {
     // does not actually cancel xhr calls
@@ -137,27 +138,27 @@ async(function * mainAsyncLocal() {
     }, cooldown);
   }
 
-  var hideTimeOut;
-  $(document.body).on('mousemove', _.debounce(function (e) {
+  let hideTimeOut;
+  $(document.body).on('mousemove', debounce(function (e) {
     if (cancelToken.cancel) {
       return;
     }
-    var element = document.elementFromPoint(e.clientX, e.clientY);
+    const element = document.elementFromPoint(e.clientX, e.clientY);
     if (element === container[0] || $.contains(container[0], element)) {
       return;
     }
     if (element) {
-      var keys = getJiraKeys(getShallowText(element));
-      if (_.size(keys)) {
+      const keys = getJiraKeys(getShallowText(element));
+      if (size(keys)) {
         clearInterval(hideTimeOut);
-        var key = keys[0];
-        async(function *(cancelToken) {
-          var issueData = yield getIssueMetaData(key);
-          var prData = yield getPullRequestData(issueData.id);
+        const key = keys[0];
+        (async function (cancelToken) {
+          const issueData = await getIssueMetaData(key);
+          const prData = await getPullRequestData(issueData.id);
           if (cancelToken.cancel) {
             return;
           }
-          var displayData = {
+          const displayData = {
             loaderGifUrl: loaderGifUrl,
             urlTitle: issueData.fields.summary,
             url: INSTANCE_URL + 'browse/' + key,
@@ -165,7 +166,7 @@ async(function * mainAsyncLocal() {
             description: issueData.renderedFields.description,
             attachments: issueData.fields.attachment
           };
-          if (_.size(prData.detail)) {
+          if (size(prData.detail)) {
             displayData.prs = prData.detail[0].pullRequests.filter(function (pr) {
               return pr.url !== location.href;
             }).map(function (pr) {
@@ -179,7 +180,7 @@ async(function * mainAsyncLocal() {
             });
           }
           // TODO: fix scrolling in google docs
-          var css = {
+          const css = {
             left: e.pageX - 30,
             top: e.pageY + 35
           };
