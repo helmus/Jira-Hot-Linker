@@ -1,3 +1,4 @@
+/*global chrome */
 import $ from 'jquery';
 import size from 'lodash/size';
 import debounce from 'lodash/debounce';
@@ -7,7 +8,7 @@ import {storageSet, storageGet} from './chrome';
 import {centerPopup} from './utils';
 import './content.scss';
 
-const getInstanceUrl = async() => (await storageGet({
+const getInstanceUrl = async () => (await storageGet({
   instanceUrl: 'https://origamilogic.atlassian.net/'
 })).instanceUrl;
 

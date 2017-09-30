@@ -2,10 +2,10 @@
 const path = require('path');
 
 module.exports = {
-  devtool: 'eval-source-map',
+  devtool: 'source-map',
   entry: './jira-plugin/src/content.jsx',
   output: {
-    path: './jira-plugin/build',
+    path: path.resolve(__dirname, 'jira-plugin', 'build'),
     filename: 'main.js',
     pathinfo: true
   },
