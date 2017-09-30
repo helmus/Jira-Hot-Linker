@@ -98,11 +98,12 @@ function buildJiraKeyMatcher(projectKeys) {
     img.onload = function () {
       currentTarget.data('_JX_loading', false);
       currentTarget.find('._JX_file_loader').hide();
+      const name = currentTarget.find('._JX_thumb_filename').text();
       opacityElements.css('opacity', 1);
       if (localCancelToken.cancel) {
         return;
       }
-      centerPopup(currentTarget.data('url'), currentTarget.data('url'), {
+      centerPopup(chrome.extension.getURL(`resources/preview.html?url=${currentTarget.data('url')}&title=${name}`), name, {
         width: this.naturalWidth,
         height: this.naturalHeight
       }).focus();
