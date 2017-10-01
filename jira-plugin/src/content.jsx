@@ -1,6 +1,7 @@
 /*global chrome */
 import $ from 'jquery';
 import size from 'lodash/size';
+import rEscape from 'escape-string-regexp';
 import debounce from 'lodash/debounce';
 import template from 'lodash/template';
 import forEach from 'lodash/forEach';
@@ -8,9 +9,22 @@ import {storageSet, storageGet} from './chrome';
 import {centerPopup} from './utils';
 import './content.scss';
 
+var defaultDomains = [
+  '*://github.com/*',
+  '*://*.atlassian.net/rest/*',
+  '*://docs.google.com/*'
+];
+var defaultInstancUrl = 'https://origamilogic.atlassian.net/';
+
+
 const getInstanceUrl = async () => (await storageGet({
-  instanceUrl: 'https://origamilogic.atlassian.net/'
+  instanceUrl: defaultInstancUrl
 })).instanceUrl;
+
+const getConfig = async () => (await storageGet({
+  instanceUrl: defaultInstancUrl,
+  domains: defaultDomains
+}));
 
 const getJiraProjects = async function () {
   let jiraProjects = (await storageGet(['jiraProjects'])).jiraProjects;
@@ -47,7 +61,17 @@ function buildJiraKeyMatcher(projectKeys) {
 }
 
 (async function mainAsyncLocal() {
-  const INSTANCE_URL = await getInstanceUrl();
+  const config = await getConfig();
+  try {
+    const domainMatch = !!config.domains.find(domain => document.location.href.match(rEscape(domain).replace(/\*/g, '.*')));
+    if (!domainMatch) {
+      return;
+    }
+  } catch (error) {
+    console.warn(error);
+    return;
+  }
+  const INSTANCE_URL = config.instanceUrl;
   const jiraProjects = await getJiraProjects();
 
   if (!size(jiraProjects)) {
@@ -116,7 +140,6 @@ function buildJiraKeyMatcher(projectKeys) {
   });
 
   function hideContainer() {
-    return;
     container.css({
       left: -5000,
       top: -5000

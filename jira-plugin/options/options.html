@@ -13,17 +13,20 @@
 
 <label>
     Your full Jira instance url: <br>
-    <input id="instanceUrl" type="text" placeholder="">
+    <input id="instanceUrl" type="text" placeholder="https://your-company.atlassian.net/">
+</label>
+<br><br>
+<label>
+    Domains where the plugin should be activated: <br>
+    Comma separated list ( supports * wild cards ):
+    <textarea rows="10" id="domains" placeholder="Comma separated text">
+    </textarea>
 </label>
 
 <div id="status"></div>
 <br>
 <br>
 <button onclick="save_options();" id="save">Save</button>
-<script>
-    console.log('HELLO SCRIPT');
-
-</script>
 <script src="options.js" type="text/javascript"></script>
 </body>
 </html>
