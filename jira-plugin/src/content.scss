@@ -15,7 +15,8 @@
     border-bottom: 1px solid #dde4e6;
     display: flex;
     > div, > a {
-      flex: 1;
+      flex-grow: 1;
+      justify-content: space-evenly;
       border-right: 1px solid #dde4e6;
       padding: 5px 10px;
       &:last-child {
