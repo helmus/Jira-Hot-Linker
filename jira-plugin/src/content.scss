@@ -7,12 +7,26 @@
   &_title {
     background-color: #F2F8FA;
     border-bottom: 1px solid #dde4e6;
-    padding: 10px 35px 10px 10px;
-    ._JX_issue_icon {
-      position: absolute;
-      right: 0;
-      top: 0;
-      padding: 14px;
+    padding: 10px 10px;
+  }
+
+  &_status {
+    background-color: #F2F8FA;
+    border-bottom: 1px solid #dde4e6;
+    display: flex;
+    > div {
+      flex: 1;
+      border-right: 1px solid #dde4e6;
+      padding: 5px 10px;
+      &:last-child {
+        border-right: none;
+      }
+    }
+    ._JX_status_icon {
+      position: relative;
+      top: 3px;
+      margin-right: 3px;
+      width: 16px;
     }
   }
 

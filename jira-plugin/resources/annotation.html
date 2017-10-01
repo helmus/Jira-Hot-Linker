@@ -1,10 +1,25 @@
 <div class="_JX_annotation">
     <div class="_JX_title">
         <a href="<%- url %>"><%- urlTitle %></a>
-        <div class="_JX_issue_icon" title="<%- typeName %>">
-            <img src="<%- typeIcon %>">
-        </div>
     </div>
+    <div class="_JX_status">
+        <% if (issuetype) {%>
+        <div title="Issue Type">
+            <img class="_JX_status_icon" src="<%- issuetype.iconUrl %>"> <%- issuetype.name %>
+        </div>
+        <% } %>
+        <% if (status) {%>
+        <div title="Status">
+            <img class="_JX_status_icon" src="<%- status.iconUrl %>"> <%- status.name %>
+        </div>
+        <% } %>
+        <% if (priority) {%>
+        <div title="Priority">
+            <img class="_JX_status_icon" src="<%- priority.iconUrl %>"> <%- priority.name %>
+        </div>
+        <% } %>
+    </div>
+
     <% if (size(prs)){ %>
     <div class="_JX_related_pr">
         <table>

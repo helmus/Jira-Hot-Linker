@@ -78,7 +78,7 @@ function buildJiraKeyMatcher(projectKeys) {
   }
 
   function getIssueMetaData(issueKey) {
-    return $.get(INSTANCE_URL + 'rest/api/2/issue/' + issueKey + '?fields=description,id,summary,attachment,comment,issuetype&expand=renderedFields');
+    return $.get(INSTANCE_URL + 'rest/api/2/issue/' + issueKey + '?fields=description,id,summary,attachment,comment,issuetype,status,priority&expand=renderedFields');
   }
 
   const container = $('<div class="_JX_container">');
@@ -116,6 +116,7 @@ function buildJiraKeyMatcher(projectKeys) {
   });
 
   function hideContainer() {
+    return;
     container.css({
       left: -5000,
       top: -5000
@@ -168,8 +169,9 @@ function buildJiraKeyMatcher(projectKeys) {
             prs: [],
             description: issueData.renderedFields.description,
             attachments: issueData.fields.attachment,
-            typeIcon: issueData.fields.issuetype.iconUrl,
-            typeName: issueData.fields.issuetype.name,
+            issuetype: issueData.fields.issuetype,
+            status: issueData.fields.status,
+            priority: issueData.fields.priority,
             loaderGifUrl,
             size,
             forEach
