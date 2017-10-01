@@ -7,7 +7,13 @@
   &_title {
     background-color: #F2F8FA;
     border-bottom: 1px solid #dde4e6;
-    padding: 10px;
+    padding: 10px 35px 10px 10px;
+    ._JX_issue_icon {
+      position: absolute;
+      right: 0;
+      top: 0;
+      padding: 14px;
+    }
   }
 
   &_annotation {

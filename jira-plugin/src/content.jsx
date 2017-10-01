@@ -78,7 +78,7 @@ function buildJiraKeyMatcher(projectKeys) {
   }
 
   function getIssueMetaData(issueKey) {
-    return $.get(INSTANCE_URL + 'rest/api/2/issue/' + issueKey + '?fields=description,id,summary,attachment,comment&expand=renderedFields');
+    return $.get(INSTANCE_URL + 'rest/api/2/issue/' + issueKey + '?fields=description,id,summary,attachment,comment,issuetype&expand=renderedFields');
   }
 
   const container = $('<div class="_JX_container">');
@@ -168,6 +168,8 @@ function buildJiraKeyMatcher(projectKeys) {
             prs: [],
             description: issueData.renderedFields.description,
             attachments: issueData.fields.attachment,
+            typeIcon: issueData.fields.issuetype.iconUrl,
+            typeName: issueData.fields.issuetype.name,
             loaderGifUrl,
             size,
             forEach
