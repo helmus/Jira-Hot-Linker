@@ -5,26 +5,16 @@ import rEscape from 'escape-string-regexp';
 import debounce from 'lodash/debounce';
 import template from 'lodash/template';
 import forEach from 'lodash/forEach';
-import {storageSet, storageGet} from './chrome';
-import {centerPopup} from './utils';
-import './content.scss';
-
-var defaultDomains = [
-  '*://github.com/*',
-  '*://*.atlassian.net/rest/*',
-  '*://docs.google.com/*'
-];
-var defaultInstancUrl = 'https://origamilogic.atlassian.net/';
-
+import {storageSet, storageGet} from 'src/chrome';
+import {centerPopup} from 'src/utils';
+import 'src/content.scss';
+import config from 'options/config.js';
 
 const getInstanceUrl = async () => (await storageGet({
-  instanceUrl: defaultInstancUrl
+  instanceUrl: config.instanceUrl
 })).instanceUrl;
 
-const getConfig = async () => (await storageGet({
-  instanceUrl: defaultInstancUrl,
-  domains: defaultDomains
-}));
+const getConfig = async () => (await storageGet(config));
 
 const getJiraProjects = async function () {
   let jiraProjects = (await storageGet(['jiraProjects'])).jiraProjects;
@@ -63,7 +53,11 @@ function buildJiraKeyMatcher(projectKeys) {
 (async function mainAsyncLocal() {
   const config = await getConfig();
   try {
-    const domainMatch = !!config.domains.find(domain => document.location.href.match(rEscape(domain).replace(/\*/g, '.*')));
+    const token = '__JX_WILDCARD__';
+    const tokenRE = new RegExp(token, 'g');
+    const domainMatch = !!config.domains.find(
+      domain => document.location.href.match(rEscape(domain.replace(/\*/g, token)).replace(tokenRE, '.*'))
+    );
     if (!domainMatch) {
       return;
     }

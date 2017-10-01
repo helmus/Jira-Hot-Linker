@@ -1,3 +1,4 @@
+/*global chrome */
 /**
  * transform chrome callback style functions to return promises
  * @param context

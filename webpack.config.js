@@ -3,10 +3,13 @@ const path = require('path');
 
 module.exports = {
   devtool: 'source-map',
-  entry: './jira-plugin/src/content.jsx',
+  entry: {
+    'build/main': './jira-plugin/src/content.jsx',
+    'options/build/options': './jira-plugin/options/options.js',
+  },
   output: {
-    path: path.resolve(__dirname, 'jira-plugin', 'build'),
-    filename: 'main.js',
+    path: path.resolve(__dirname, 'jira-plugin'),
+    filename: '[name].js',
     pathinfo: true
   },
   module: {
@@ -29,7 +32,8 @@ module.exports = {
   },
   resolve: {
     modules: [
-      path.resolve(__dirname, 'node_modules')
+      path.resolve(__dirname, 'node_modules'),
+      path.resolve(__dirname, 'jira-plugin'),
     ],
     extensions: ['.webpack-loader.js', '.web-loader.js', '.loader.js', '.js', '.jsx'],
   }
