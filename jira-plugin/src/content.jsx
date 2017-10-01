@@ -89,6 +89,10 @@ function buildJiraKeyMatcher(projectKeys) {
     if (currentTarget.data('_JX_loading')) {
       return;
     }
+    if (!currentTarget.data('mimeType').startsWith('image')) {
+      return;
+    }
+    e.preventDefault();
     currentTarget.data('loading', true);
     const opacityElements = currentTarget.children(':not(._JX_file_loader)');
     opacityElements.css('opacity', 0.2);

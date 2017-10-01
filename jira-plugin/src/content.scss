@@ -106,11 +106,12 @@
   &_thumb {
     float: left;
     margin: 5px;
-    border: 1px solid rgb(221, 228, 230);
+    border: 1px solid rgb(221, 228, 230) !important;
     cursor: pointer;
     height: 145px;
     width: 200px;
     position: relative;
+    overflow: hidden;
   }
 
   &_thumb_filename {
