@@ -49,9 +49,16 @@ function buildJiraKeyMatcher(projectKeys) {
     return result;
   };
 }
+var jquery = $;
 
 (async function mainAsyncLocal() {
   const config = await getConfig();
+  if (document.location.href.startsWith('https://github.com/helmus/Jira-Hot-Linker')) {
+    jquery('#readme a:contains(Click here to open)').on('click', (e) => {
+      e.preventDefault();
+      chrome.runtime.sendMessage({type: 'open_settings'});
+    });
+  }
   try {
     const token = '__JX_WILDCARD__';
     const tokenRE = new RegExp(token, 'g');
@@ -62,7 +69,7 @@ function buildJiraKeyMatcher(projectKeys) {
       return;
     }
   } catch (error) {
-    console.warn(error);
+    console.log(error);
     return;
   }
   const INSTANCE_URL = config.instanceUrl;
@@ -75,7 +82,6 @@ function buildJiraKeyMatcher(projectKeys) {
   const getJiraKeys = buildJiraKeyMatcher(jiraProjects.map(function (project) {
     return project.key;
   }));
-
   const annotation = template(await $.get(chrome.extension.getURL('resources/annotation.html')));
   const loaderGifUrl = chrome.extension.getURL('resources/ajax-loader.gif');
 

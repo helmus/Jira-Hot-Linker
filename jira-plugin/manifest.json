@@ -19,6 +19,12 @@
       ]
     }
   ],
+  "background": {
+    "scripts": [
+      "src/background.js"
+    ],
+    "persistent": false
+  },
   "web_accessible_resources": [
     "resources/*"
   ],
