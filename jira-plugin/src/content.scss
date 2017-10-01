@@ -14,13 +14,16 @@
     background-color: #F2F8FA;
     border-bottom: 1px solid #dde4e6;
     display: flex;
-    > div {
+    > div, > a {
       flex: 1;
       border-right: 1px solid #dde4e6;
       padding: 5px 10px;
       &:last-child {
         border-right: none;
       }
+    }
+    > a {
+      text-decoration: none !important;
     }
     ._JX_status_icon {
       position: relative;

@@ -18,6 +18,11 @@
             <img class="_JX_status_icon" src="<%- priority.iconUrl %>"> <%- priority.name %>
         </div>
         <% } %>
+        <% if (comment && comment.total) {%>
+        <a title="<%- comments %>" target="_blank" style="display: block" href="<%- url + '#comment-' + comment.comments[0].id  %>">
+            💬 &nbsp; <%- comment.total %>
+        </a>
+        <% } %>
     </div>
 
     <% if (size(prs)){ %>

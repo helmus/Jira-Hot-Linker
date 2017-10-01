@@ -180,6 +180,12 @@ function buildJiraKeyMatcher(projectKeys) {
           if (cancelToken.cancel) {
             return;
           }
+          var comments = '';
+          if (issueData.fields.comment && issueData.fields.comment.total) {
+            comments = issueData.fields.comment.comments.map(
+              comment => comment.author.displayName + ':\n' + comment.body
+            ).join('\n\n');
+          }
           const displayData = {
             urlTitle: issueData.fields.summary,
             url: INSTANCE_URL + 'browse/' + key,
@@ -189,6 +195,8 @@ function buildJiraKeyMatcher(projectKeys) {
             issuetype: issueData.fields.issuetype,
             status: issueData.fields.status,
             priority: issueData.fields.priority,
+            comment: issueData.fields.comment,
+            comments,
             loaderGifUrl,
             size,
             forEach
