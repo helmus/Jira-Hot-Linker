@@ -5,7 +5,7 @@ import rEscape from 'escape-string-regexp';
 import debounce from 'lodash/debounce';
 import template from 'lodash/template';
 import forEach from 'lodash/forEach';
-import {storageSet, storageGet} from 'src/chrome';
+import {storageGet} from 'src/chrome';
 import {centerPopup} from 'src/utils';
 import 'src/content.scss';
 import config from 'options/config.js';
@@ -15,20 +15,6 @@ const getInstanceUrl = async () => (await storageGet({
 })).instanceUrl;
 
 const getConfig = async () => (await storageGet(config));
-
-const getJiraProjects = async function () {
-  let jiraProjects = (await storageGet(['jiraProjects'])).jiraProjects;
-  if (!size(jiraProjects)) {
-    jiraProjects = await $.get(await getInstanceUrl() + 'rest/api/2/project');
-    if (!size(jiraProjects)) {
-      return [];
-    }
-    await storageSet({
-      jiraProjects: jiraProjects
-    });
-  }
-  return jiraProjects;
-};
 
 /**
  * Returns a function that will return an array of jira tickets for any given string
@@ -73,7 +59,7 @@ var jquery = $;
     return;
   }
   const INSTANCE_URL = config.instanceUrl;
-  const jiraProjects = await getJiraProjects();
+  const jiraProjects = await $.get(await getInstanceUrl() + 'rest/api/2/project');
 
   if (!size(jiraProjects)) {
     console.log('Couldn\'t find any jira projects...');
