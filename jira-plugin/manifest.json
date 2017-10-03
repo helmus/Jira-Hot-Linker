@@ -1,24 +1,12 @@
 {
   "name": "Jira HotLinker",
   "description": "Jira HotLinker, quick access to Jira metadata when hovering over ticket numbers!",
-  "version": "1.4.1",
+  "version": "1.4.5",
   "manifest_version": 2,
   "icons": {
     "128": "icons/jiralink128.png"
   },
   "minimum_chrome_version": "60",
-  "content_scripts": [
-    {
-      "matches": [
-        "http://*/*",
-        "https://*/*"
-      ],
-      "run_at": "document_end",
-      "js": [
-        "build/main.js"
-      ]
-    }
-  ],
   "background": {
     "scripts": [
       "src/background.js"
@@ -28,7 +16,14 @@
   "web_accessible_resources": [
     "resources/*"
   ],
+  "optional_permissions": [
+    "http://*/*",
+    "https://*/*"
+  ],
   "permissions": [
+    "declarativeContent",
+    "https://*.atlassian.net/",
+    "https://github.com/",
     "storage",
     "cookies"
   ],
