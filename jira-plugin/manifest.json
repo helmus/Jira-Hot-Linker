@@ -9,7 +9,7 @@
   "minimum_chrome_version": "60",
   "background": {
     "scripts": [
-      "src/background.js"
+      "build/background.js"
     ],
     "persistent": false
   },

@@ -5,6 +5,7 @@ module.exports = {
   devtool: 'source-map',
   entry: {
     'build/main': './jira-plugin/src/content.jsx',
+    'build/background': './jira-plugin/src/background.js',
     'options/build/options': './jira-plugin/options/options.js',
   },
   output: {

@@ -1,7 +1,6 @@
 /*global chrome */
 import $ from 'jquery';
 import size from 'lodash/size';
-import rEscape from 'escape-string-regexp';
 import debounce from 'lodash/debounce';
 import template from 'lodash/template';
 import forEach from 'lodash/forEach';
@@ -35,7 +34,8 @@ function buildJiraKeyMatcher(projectKeys) {
     return result;
   };
 }
-var jquery = $;
+
+const jquery = $;
 
 (async function mainAsyncLocal() {
   const config = await getConfig();
@@ -44,19 +44,6 @@ var jquery = $;
       e.preventDefault();
       chrome.runtime.sendMessage({type: 'open_settings'});
     });
-  }
-  try {
-    const token = '__JX_WILDCARD__';
-    const tokenRE = new RegExp(token, 'g');
-    const domainMatch = !!config.domains.find(
-      domain => document.location.href.match(rEscape(domain.replace(/\*/g, token)).replace(tokenRE, '.*'))
-    );
-    if (!domainMatch) {
-      return;
-    }
-  } catch (error) {
-    console.log(error);
-    return;
   }
   const INSTANCE_URL = config.instanceUrl;
   const jiraProjects = await $.get(await getInstanceUrl() + 'rest/api/2/project');
@@ -172,7 +159,7 @@ var jquery = $;
           if (cancelToken.cancel) {
             return;
           }
-          var comments = '';
+          let comments = '';
           if (issueData.fields.comment && issueData.fields.comment.total) {
             comments = issueData.fields.comment.comments.map(
               comment => comment.author.displayName + ':\n' + comment.body
@@ -208,7 +195,7 @@ var jquery = $;
           }
           // TODO: fix scrolling in google docs
           const css = {
-            left: e.pageX - 30,
+            left: e.pageX + 20,
             top: e.pageY + 35
           };
           container.html(annotation(displayData)).css(css);
