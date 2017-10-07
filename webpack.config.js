@@ -1,12 +1,13 @@
 /* eslint-env node */
 const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
   devtool: 'source-map',
   entry: {
     'build/main': './jira-plugin/src/content.jsx',
     'build/background': './jira-plugin/src/background.js',
-    'options/build/options': './jira-plugin/options/options.js',
+    'options/build/options': './jira-plugin/options/options.jsx',
   },
   output: {
     path: path.resolve(__dirname, 'jira-plugin'),
@@ -31,6 +32,11 @@ module.exports = {
       },
     ]
   },
+  plugins: [
+    new webpack.ProvidePlugin({
+      'React': 'react'
+    })
+  ],
   resolve: {
     modules: [
       path.resolve(__dirname, 'node_modules'),

@@ -4,9 +4,9 @@ import size from 'lodash/size';
 import debounce from 'lodash/debounce';
 import template from 'lodash/template';
 import forEach from 'lodash/forEach';
-import {storageGet} from 'src/chrome';
 import {centerPopup} from 'src/utils';
 import 'src/content.scss';
+import {storageGet} from 'src/chrome';
 import config from 'options/config.js';
 
 const getInstanceUrl = async () => (await storageGet({

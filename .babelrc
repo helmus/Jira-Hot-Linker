@@ -10,7 +10,8 @@
         "loose": true,
         "useBuiltIns": true
       }
-    ]
+    ],
+    "react"
   ],
   "plugins": [
     "lodash",

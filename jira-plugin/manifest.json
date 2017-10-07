@@ -17,13 +17,12 @@
     "resources/*"
   ],
   "optional_permissions": [
-    "http://*/*",
-    "https://*/*"
+    "*://*/*"
   ],
   "permissions": [
     "declarativeContent",
-    "https://*.atlassian.net/",
-    "https://github.com/",
+    "*://*.atlassian.net/",
+    "*://github.com/",
     "storage",
     "cookies"
   ],

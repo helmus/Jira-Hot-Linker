@@ -2,6 +2,7 @@
 import defaultConfig from 'options/config.js';
 import regexEscape from 'escape-string-regexp';
 import {storageGet} from 'src/chrome';
+import {uniqueId} from 'lodash';
 
 (function () {
   chrome.runtime.onMessage.addListener(function (request) {
@@ -10,7 +11,7 @@ import {storageGet} from 'src/chrome';
     }
   });
   
-  const token = '__JX_WILDCARD__';
+  const token = uniqueId('__JX_WILDCARD__');
   const tokenRE = new RegExp(token, 'g');
   
   function pageStateWildCardMatcher(wildCardUrl) {

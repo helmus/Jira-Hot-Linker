@@ -15,11 +15,18 @@ const promisfyChromeAsync = (context, funcName) =>
         }
         resolve(...resolvedArgs);
       });
-      context[funcName].apply(context, forwardedArgs);
+      context[funcName](...forwardedArgs);
     });
   };
 
 const storageGet = promisfyChromeAsync(chrome.storage.sync, 'get');
 const storageSet = promisfyChromeAsync(chrome.storage.sync, 'set');
+const permissionsRequest = promisfyChromeAsync(chrome.permissions, 'request');
+const permissionsRemove = promisfyChromeAsync(chrome.permissions, 'remove');
 
-export {storageSet, storageGet};
+export {
+  storageSet,
+  storageGet,
+  permissionsRequest,
+  permissionsRemove
+};
