@@ -4,6 +4,7 @@
   "description": "Jira HotLinker, quick access to Jira metadata when hovering over ticket numbers!",
   "main": " ",
   "scripts": {
+    "analyze": "webpack -p --bail --profile --json > stats.json || webpack-bundle-analyzer stats.json",
     "dev": "webpack --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -22,19 +23,21 @@
     "babel-core": "6.26.0",
     "babel-eslint": "7.2.3",
     "babel-loader": "6.4.1",
+    "babel-plugin-lodash": "^3.2.11",
     "babel-plugin-transform-es2015-parameters": "6.24.1",
     "babel-plugin-transform-es2015-spread": "6.22.0",
     "babel-plugin-transform-object-rest-spread": "6.26.0",
     "babel-preset-env": "1.6.0",
     "bluebird": "3.5.0",
     "css-loader": "0.26.4",
+    "escape-string-regexp": "1.0.5",
     "eslint": "3.19.0",
-    "jquery": "3.2.1",
+    "jquery": "^3.2.1",
     "lodash": "4.17.4",
     "node-sass": "4.5.3",
     "sass-loader": "4.1.1",
     "style-loader": "0.13.2",
     "webpack": "3.6.0",
-    "escape-string-regexp": "1.0.5"
+    "webpack-bundle-analyzer": "^2.9.0"
   }
 }
