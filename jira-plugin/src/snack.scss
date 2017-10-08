@@ -1,0 +1,41 @@
+._JX {
+  &_snack {
+    position: fixed;
+    left: 50%;
+    min-height: 30px;
+    min-width: 50px;
+    transform: translateX(-50%) translateY(100%) translateY(20px);
+    transition: transform 300ms;
+    &_show {
+      transition: transform 150ms;
+      transform: translateX(-50%);
+    }
+    background-color: black;
+    padding: 14px 20px;
+    border-radius: 50px;
+    bottom: 20px;
+    border: 2px solid white;
+
+    &_icon {
+      position: absolute;
+      left: 6px;
+      top: 5px;
+      padding: 5px;
+      background: white;
+      border-radius: 30px;
+      width: 39px;
+      height: 39px;
+      &_img {
+        width: 27px;
+        background-color: white;
+        box-sizing: content-box;
+        position: absolute;
+        left: 6px;
+      }
+    }
+    &_message {
+      margin-left: 40px;
+      color: white;
+    }
+  }
+}

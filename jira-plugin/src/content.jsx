@@ -1,13 +1,14 @@
 /*global chrome */
-import $ from 'jquery';
 import size from 'lodash/size';
 import debounce from 'lodash/debounce';
 import template from 'lodash/template';
 import forEach from 'lodash/forEach';
 import {centerPopup} from 'src/utils';
-import 'src/content.scss';
 import {storageGet} from 'src/chrome';
+import {snackBar} from 'src/snack';
 import config from 'options/config.js';
+
+import 'src/content.scss';
 
 const getInstanceUrl = async () => (await storageGet({
   instanceUrl: config.instanceUrl
@@ -35,12 +36,17 @@ function buildJiraKeyMatcher(projectKeys) {
   };
 }
 
-const jquery = $;
+chrome.runtime.onMessage.addListener(function (msg) {
+  if (msg.action === 'message') {
+    snackBar(msg.message);
+  }
+});
 
-(async function mainAsyncLocal() {
+async function mainAsyncLocal() {
+  const $ = require('jquery');
   const config = await getConfig();
   if (document.location.href.startsWith('https://github.com/helmus/Jira-Hot-Linker')) {
-    jquery('#readme a:contains(Click here to open)').on('click', (e) => {
+    $('#readme a:contains(Click here to open)').on('click', (e) => {
       e.preventDefault();
       chrome.runtime.sendMessage({type: 'open_settings'});
     });
@@ -205,4 +211,6 @@ const jquery = $;
       }
     }
   }, 100));
-})();
+}
+
+window.addEventListener('load', mainAsyncLocal);

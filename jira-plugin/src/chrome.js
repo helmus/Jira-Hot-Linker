@@ -5,7 +5,7 @@
  * @param funcName
  * @returns {*|n}
  */
-const promisfyChromeAsync = (context, funcName) =>
+export const promisifyChrome = (context, funcName) =>
   (...forwardedArgs) => {
     return new Promise((resolve, reject) => {
       forwardedArgs.push((...resolvedArgs) => {
@@ -19,10 +19,11 @@ const promisfyChromeAsync = (context, funcName) =>
     });
   };
 
-const storageGet = promisfyChromeAsync(chrome.storage.sync, 'get');
-const storageSet = promisfyChromeAsync(chrome.storage.sync, 'set');
-const permissionsRequest = promisfyChromeAsync(chrome.permissions, 'request');
-const permissionsRemove = promisfyChromeAsync(chrome.permissions, 'remove');
+const storageGet = promisifyChrome(chrome.storage.sync, 'get');
+const storageSet = promisifyChrome(chrome.storage.sync, 'set');
+const permissionsRequest = promisifyChrome(chrome.permissions, 'request');
+const permissionsRemove = promisifyChrome(chrome.permissions, 'remove');
+
 
 export {
   storageSet,
