@@ -19,6 +19,9 @@ function toValidPermissionUri(val) {
   if (!hasPathSlash.test(val)) {
     val = val + '/';
   }
+  if (val.indexOf('*') === -1){
+    val = val + '*';
+  }
   return val;
 }
 
