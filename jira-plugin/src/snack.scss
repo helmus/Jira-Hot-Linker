@@ -1,5 +1,7 @@
 body ._JX {
   &_snack {
+    box-sizing: border-box !important;
+    z-index: 99999;
     position: fixed;
     left: 50%;
     min-height: 30px;
@@ -17,9 +19,11 @@ body ._JX {
     border: 2px solid white;
 
     &_icon {
+      box-sizing: border-box !important;
       position: absolute;
       left: 6px;
-      top: 5px;
+      top: 50%;
+      transform: translateY(-50%);
       padding: 5px;
       background: white;
       border-radius: 30px;

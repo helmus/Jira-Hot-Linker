@@ -202,7 +202,7 @@ async function mainAsyncLocal() {
           // TODO: fix scrolling in google docs
           const css = {
             left: e.pageX + 20,
-            top: e.pageY + 35
+            top: e.pageY + 25
           };
           container.html(annotation(displayData)).css(css);
         })(cancelToken);
