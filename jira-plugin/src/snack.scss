@@ -1,14 +1,14 @@
-._JX {
+body ._JX {
   &_snack {
     position: fixed;
     left: 50%;
     min-height: 30px;
     min-width: 50px;
-    transform: translateX(-50%) translateY(100%) translateY(20px);
-    transition: transform 300ms;
+    transform: translateX(-50%) translateY(100%) translateY(20px) !important;
+    transition: transform 300ms !important;
     &_show {
-      transition: transform 150ms;
-      transform: translateX(-50%);
+      transition: transform 150ms !important;
+      transform: translateX(-50%) !important;
     }
     background-color: #2f2f2f;
     padding: 14px 20px;
@@ -28,7 +28,7 @@
       &_img {
         width: 27px;
         background-color: white;
-        box-sizing: content-box;
+        box-sizing: content-box !important;
         position: absolute;
         left: 6px;
       }
