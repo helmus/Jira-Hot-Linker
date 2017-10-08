@@ -2,7 +2,7 @@
 import defaultConfig from 'options/config';
 import ReactDOM from 'react-dom';
 import {storageGet, storageSet, permissionsRequest} from 'src/chrome';
-import {hasPathSlash, resetDeclarativeMapping} from 'options/declarative';
+import {hasPathSlash, resetDeclarativeMapping, toMatchUrl} from 'options/declarative';
 
 import 'options/options.scss';
 
@@ -12,25 +12,15 @@ window.onerror = function (msg, file, line, column, error) {
   errorText.innerHTML = error.stack;
 };
 
-function toValidPermissionUri(val) {
-  if (val.indexOf('://') === -1) {
-    val = '*://' + val;
-  }
-  if (!hasPathSlash.test(val)) {
-    val = val + '/';
-  }
-  if (val.indexOf('*') === -1){
-    val = val + '*';
-  }
-  return val;
-}
-
 async function saveOptions() {
   const status = document.getElementById('status');
   const domains = document.getElementById('domains')
-    .value.split('\n').map(x => x.trim()).filter(x => !!x).map(x => x === '<all_urls>' ? '*://*/*' : x);
+    .value
+    .split('\n')
+    .map(x => x.trim())
+    .filter(x => !!x);
   let instanceUrl = document.getElementById('instanceUrl').value.trim();
-  
+
   if (!instanceUrl) {
     status.innerHTML = '<br /><strong>You must provide your jira instance url.</strong>';
     return;
@@ -39,14 +29,15 @@ async function saveOptions() {
     instanceUrl = instanceUrl + '/';
   }
   const permissionDomains = domains.concat([instanceUrl]);
+
   let granted;
   try {
-    granted = await permissionsRequest({'origins': permissionDomains.map(toValidPermissionUri)});
+    granted = await permissionsRequest({'origins': permissionDomains.map(toMatchUrl)});
   } catch (ex) {
     status.innerHTML = `<br /><strong>${ex.message}</strong>`;
     return;
   }
-  
+
   if (granted) {
     await storageSet({instanceUrl, domains});
     resetDeclarativeMapping();

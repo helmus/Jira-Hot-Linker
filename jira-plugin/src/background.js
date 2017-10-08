@@ -25,7 +25,7 @@ import {contentScript, resetDeclarativeMapping} from 'options/declarative';
       chrome.runtime.openOptionsPage();
       return;
     }
-    const origin = new URL(url).origin + '/*';
+    const origin = new URL(url).origin + '/';
     const granted = await permissionsRequest({origins: [origin]});
     if (granted) {
       const config = await storageGet(defaultConfig);
