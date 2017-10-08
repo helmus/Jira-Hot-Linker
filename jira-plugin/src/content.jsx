@@ -3,12 +3,12 @@ import size from 'lodash/size';
 import debounce from 'lodash/debounce';
 import template from 'lodash/template';
 import forEach from 'lodash/forEach';
-import {centerPopup} from 'src/utils';
+import {centerPopup, waitForDocument} from 'src/utils';
 import {storageGet} from 'src/chrome';
 import {snackBar} from 'src/snack';
 import config from 'options/config.js';
 
-import 'src/content.scss';
+waitForDocument(() => require('src/content.scss'));
 
 const getInstanceUrl = async () => (await storageGet({
   instanceUrl: config.instanceUrl
@@ -46,7 +46,7 @@ async function mainAsyncLocal() {
   const $ = require('jquery');
   const config = await getConfig();
   if (document.location.href.startsWith('https://github.com/helmus/Jira-Hot-Linker')) {
-    $('#readme a:contains(Click here to open)').on('click', (e) => {
+    $('#readme').find('a:contains(Click here to open)').on('click', (e) => {
       e.preventDefault();
       chrome.runtime.sendMessage({type: 'open_settings'});
     });
@@ -213,4 +213,4 @@ async function mainAsyncLocal() {
   }, 100));
 }
 
-window.addEventListener('load', mainAsyncLocal);
+document.addEventListener('DOMContentLoaded', mainAsyncLocal);

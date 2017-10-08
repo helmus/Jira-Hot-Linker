@@ -1,5 +1,7 @@
 /*global chrome */
-import 'src/snack.scss';
+import {waitForDocument} from 'src/utils';
+
+waitForDocument(() => require('src/snack.scss'));
 
 export function snackBar(message, timeout = 3000) {
   const $ = require('jquery');

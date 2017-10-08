@@ -1,7 +1,9 @@
 /*global chrome */
 import defaultConfig from 'options/config.js';
-import {storageGet, storageSet, permissionsRequest} from 'src/chrome';
+import {storageGet, storageSet, permissionsRequest, promisifyChrome} from 'src/chrome';
 import {contentScript, resetDeclarativeMapping} from 'options/declarative';
+
+const executeScript = promisifyChrome(chrome.tabs, 'executeScript');
 
 (function () {
   chrome.runtime.onInstalled.addListener(async () => {
@@ -39,10 +41,10 @@ import {contentScript, resetDeclarativeMapping} from 'options/declarative';
       config.domains.push(origin);
       await storageSet(config);
       await resetDeclarativeMapping();
-      chrome.tabs.executeScript(null, {file: contentScript});
+      await executeScript(null, {file: contentScript});
       chrome.tabs.sendMessage(tab.id, {
         action: 'message',
-        message: origin + ' has been added to the list.'
+        message: origin + ' added successfully !'
       });
     }
   });
