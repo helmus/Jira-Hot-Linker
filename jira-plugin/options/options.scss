@@ -1,0 +1,17 @@
+input, textarea {
+  width: 400px;
+  margin: 0px;
+  margin-top: 10px;
+  padding: 5px;
+}
+
+textarea {
+  $base: 20px;
+  $lineColor: #e2e2e2;
+  border-color: $lineColor;
+  background-attachment: local;
+  background-image: repeating-linear-gradient(white, white $base, $lineColor $base, $lineColor $base + 1, white $base + 1);
+  line-height: $base + 1;
+  padding: 1px 5px;
+  height: 20 * 7 + 6px;
+}

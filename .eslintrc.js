@@ -9,6 +9,9 @@ module.exports = {
   },
   "extends": "eslint:recommended",
   "parser": "babel-eslint",
+  "plugins": [
+    "react"
+  ],
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true,
@@ -17,6 +20,7 @@ module.exports = {
     "sourceType": "module"
   },
   "rules": {
+    "react/jsx-uses-vars": 1,
     "no-console": "off",
     "prefer-const": "error",
     "indent": [

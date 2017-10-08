@@ -21,7 +21,6 @@
   ],
   "permissions": [
     "declarativeContent",
-    "*://*.atlassian.net/",
     "*://github.com/",
     "storage",
     "cookies"

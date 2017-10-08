@@ -1,8 +1,6 @@
 export default {
   domains: [
-    '*://github.com/*',
-    '*://*.atlassian.net/*',
-    '*://docs.google.com/*'
+    '*://github.com/*'
   ],
   instanceUrl: 'https://origamilogic.atlassian.net/'
 };

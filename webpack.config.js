@@ -29,8 +29,7 @@ module.exports = {
           'style-loader',
           'css-loader?sourceMap!sass-loader?sourceMap'
         ]
-      },
-    ]
+      }]
   },
   plugins: [
     new webpack.ProvidePlugin({
