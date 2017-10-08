@@ -1,42 +1,39 @@
 /*global chrome */
 import defaultConfig from 'options/config.js';
-import regexEscape from 'escape-string-regexp';
-import {storageGet} from 'src/chrome';
-import {uniqueId} from 'lodash';
+import {storageGet, storageSet, permissionsRequest} from 'src/chrome';
+import {contentScript, resetDeclarativeMapping} from 'options/declarative';
 
 (function () {
+  chrome.runtime.onInstalled.addListener(async () => {
+    const config = await storageGet(defaultConfig);
+    if (!config.instanceUrl) {
+      chrome.runtime.openOptionsPage();
+      return;
+    }
+    resetDeclarativeMapping();
+  });
+  
   chrome.runtime.onMessage.addListener(function (request) {
     if (request.type === 'open_settings') {
       chrome.runtime.openOptionsPage();
     }
   });
   
-  const token = uniqueId('__JX_WILDCARD__');
-  const tokenRE = new RegExp(token, 'g');
-  
-  function pageStateWildCardMatcher(wildCardUrl) {
-    const urlRegex = regexEscape(wildCardUrl.replace(/\*/g, token)).replace(tokenRE, '.*');
-    return new chrome.declarativeContent.PageStateMatcher({
-      pageUrl: {
-        urlMatches: urlRegex,
-        schemes: ['http', 'https'],
-      }
-    });
-  }
-  
-  chrome.runtime.onInstalled.addListener(async function () {
+  chrome.browserAction.onClicked.addListener(async function ({url}) {
     const config = await storageGet(defaultConfig);
-    chrome.declarativeContent.onPageChanged.removeRules(
-      undefined,
-      function () {
-        chrome.declarativeContent.onPageChanged.addRules([{
-          conditions: config.domains.map(pageStateWildCardMatcher),
-          actions: [new chrome.declarativeContent.RequestContentScript({
-            js: ['build/main.js'],
-          })]
-        }]);
-      }
-    );
+    if (!config.instanceUrl) {
+      chrome.runtime.openOptionsPage();
+      return;
+    }
+    const origin = new URL(url).origin + '/*';
+    const granted = await permissionsRequest({origins: [origin]});
+    if (granted) {
+      const config = await storageGet(defaultConfig);
+      config.domains.push(origin);
+      await storageSet(config);
+      await resetDeclarativeMapping();
+      chrome.tabs.executeScript(null, {file: contentScript});
+    }
   });
   
 })();

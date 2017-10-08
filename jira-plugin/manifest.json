@@ -6,6 +6,9 @@
   "icons": {
     "128": "icons/jiralink128.png"
   },
+  "browser_action": {
+    "default_title": "Click to always search for tickets on this page"
+  },
   "minimum_chrome_version": "60",
   "background": {
     "scripts": [
@@ -20,6 +23,7 @@
     "*://*/*"
   ],
   "permissions": [
+    "activeTab",
     "declarativeContent",
     "*://github.com/",
     "storage",

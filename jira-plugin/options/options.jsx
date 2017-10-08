@@ -2,6 +2,7 @@
 import defaultConfig from 'options/config';
 import ReactDOM from 'react-dom';
 import {storageGet, storageSet, permissionsRequest} from 'src/chrome';
+import {hasPathSlash, resetDeclarativeMapping} from 'options/declarative';
 
 import 'options/options.scss';
 
@@ -10,8 +11,6 @@ document.body.appendChild(errorText);
 window.onerror = function (msg, file, line, column, error) {
   errorText.innerHTML = error.stack;
 };
-
-const hasPathSlash = /.*:\/\/.*\//;
 
 function toValidPermissionUri(val) {
   if (val.indexOf('://') === -1) {
@@ -27,12 +26,19 @@ async function saveOptions() {
   const status = document.getElementById('status');
   const domains = document.getElementById('domains')
     .value.split('\n').map(x => x.trim()).filter(x => !!x).map(x => x === '<all_urls>' ? '*://*/*' : x);
-  const instanceUrl = document.getElementById('instanceUrl').value;
-  domains.push(instanceUrl);
+  let instanceUrl = document.getElementById('instanceUrl').value.trim();
   
+  if (!instanceUrl) {
+    status.innerHTML = '<br /><strong>You must provide your jira instance url.</strong>';
+    return;
+  }
+  if (!hasPathSlash.test(instanceUrl)) {
+    instanceUrl = instanceUrl + '/';
+  }
+  const permissionDomains = domains.concat([instanceUrl]);
   let granted;
   try {
-    granted = await permissionsRequest({'origins': domains.map(toValidPermissionUri)});
+    granted = await permissionsRequest({'origins': permissionDomains.map(toValidPermissionUri)});
   } catch (ex) {
     status.innerHTML = `<br /><strong>${ex.message}</strong>`;
     return;
@@ -40,6 +46,7 @@ async function saveOptions() {
   
   if (granted) {
     await storageSet({instanceUrl, domains});
+    resetDeclarativeMapping();
     status.innerHTML = '<br />Options saved.';
     setTimeout(function () {
       status.textContent = '';
@@ -74,9 +81,9 @@ function ConfigPage(props) {
         <strong><a href='https://developer.chrome.com/extensions/match_patterns'>match pattern</a>
         </strong>.
         <br/>
-        <textarea id="domains" defaultValue={props.domains.join('\n')} placeholder="1 site per line"/>
+        <textarea id="domains" defaultValue={props.domains && props.domains.join('\n')} placeholder="1 site per line"/>
         <br/>
-        You can also enable new domains at any time by clicking on the extension icon !
+        You can also add new domains at any time by clicking on the extension icon !
       </label>
       <div id='status'></div>
       <br/>
