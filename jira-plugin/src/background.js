@@ -8,7 +8,7 @@ const executeScript = promisifyChrome(chrome.tabs, 'executeScript');
 (function () {
   chrome.runtime.onInstalled.addListener(async () => {
     const config = await storageGet(defaultConfig);
-    if (!config.instanceUrl) {
+    if (!config.instanceUrl || !config.v15upgrade) {
       chrome.runtime.openOptionsPage();
       return;
     }

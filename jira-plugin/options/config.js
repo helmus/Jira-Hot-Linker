@@ -2,6 +2,7 @@ export default {
   domains: [
     '*://github.com/*'
   ],
-  instanceUrl: ''
+  instanceUrl: '',
+  v15upgrade: false
 };
 

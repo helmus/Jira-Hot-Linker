@@ -47,7 +47,7 @@ async function saveOptions() {
   }
 
   if (granted) {
-    await storageSet({instanceUrl, domains});
+    await storageSet({instanceUrl, domains, v15upgrade:true});
     resetDeclarativeMapping();
     status.innerHTML = '<br />Options saved.';
     setTimeout(function () {
@@ -67,6 +67,12 @@ async function main() {
 function ConfigPage(props) {
   return (
     <div>
+      {(() => {
+        if (!props.v15upgrade) {
+          return (<label className='upgradeWarning'>Please click save to activate the new ( reduced ) permissions !
+            <br/><br/></label>);
+        }
+      })()}
       <label>
         Your full Jira instance url: <br/>
         <input
