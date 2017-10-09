@@ -44,6 +44,8 @@ chrome.runtime.onMessage.addListener(function (msg) {
 
 async function mainAsyncLocal() {
   const $ = require('jquery');
+  const draggable = require('jquery-ui/ui/widgets/draggable');
+
   const config = await getConfig();
   if (document.location.href.startsWith('https://github.com/helmus/Jira-Hot-Linker')) {
     $('#readme').find('a:contains(Click here to open)').on('click', (e) => {
@@ -86,6 +88,9 @@ async function mainAsyncLocal() {
 
   const container = $('<div class="_JX_container">');
   $(document.body).append(container);
+  new draggable({
+    handle: '._JX_title, ._JX_status',
+  }, container);
 
   $(document.body).on('click', '._JX_thumb', function previewThumb(e) {
     const currentTarget = $(e.currentTarget);
@@ -119,10 +124,13 @@ async function mainAsyncLocal() {
   });
 
   function hideContainer() {
+    containerPinned = false;
     container.css({
       left: -5000,
-      top: -5000
-    });
+      top: -5000,
+      position: 'absolute',
+    }).removeClass('container-pinned');
+
     passiveCancel(0);
   }
 
@@ -146,18 +154,40 @@ async function mainAsyncLocal() {
   }
 
   let hideTimeOut;
+  let containerPinned = false;
+  container.on('dragstop', () => {
+    if (!containerPinned) {
+      snackBar('Ticket Pinned! Hit esc to close !');
+      container.addClass('container-pinned');
+      const position = container.position();
+      container.css({
+        left: position.left - document.scrollingElement.scrollLeft,
+        top: position.top - document.scrollingElement.scrollTop,
+      });
+      containerPinned = true;
+      clearTimeout(hideTimeOut);
+    }
+  });
   $(document.body).on('mousemove', debounce(function (e) {
     if (cancelToken.cancel) {
       return;
     }
     const element = document.elementFromPoint(e.clientX, e.clientY);
     if (element === container[0] || $.contains(container[0], element)) {
+      // cancel when hovering over the container it self
       return;
     }
     if (element) {
-      const keys = getJiraKeys(getShallowText(element));
+      let keys = getJiraKeys(getShallowText(element));
+      if (!size(keys) && element.href) {
+        keys = getJiraKeys(element.href);
+      }
+      if (!size(keys) && element.parentElement.href) {
+        keys = getJiraKeys(element.parentElement.href);
+      }
+
       if (size(keys)) {
-        clearInterval(hideTimeOut);
+        clearTimeout(hideTimeOut);
         const key = keys[0];
         (async function (cancelToken) {
           const issueData = await getIssueMetaData(key);
@@ -204,13 +234,16 @@ async function mainAsyncLocal() {
             left: e.pageX + 20,
             top: e.pageY + 25
           };
-          container.html(annotation(displayData)).css(css);
+          container.html(annotation(displayData));
+          if (!containerPinned) {
+            container.css(css);
+          }
         })(cancelToken);
-      } else {
+      } else if (!containerPinned) {
         hideTimeOut = setTimeout(hideContainer, 250);
       }
     }
-  }, 100));
+  }, 80));
 }
 
 document.addEventListener('DOMContentLoaded', mainAsyncLocal);

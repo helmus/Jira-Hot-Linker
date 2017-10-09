@@ -2,6 +2,9 @@ body ._JX {
   &_container {
     position: absolute;
     z-index: 99999;
+    &.container-pinned {
+      position: fixed !important;
+    }
   }
 
   &_title {
@@ -35,7 +38,7 @@ body ._JX {
   }
 
   &_annotation {
-    max-width: 500px;
+    max-width: 600px;
     border: 1px solid #dde4e6;
     border-radius: 3px;
     background-color: white;
@@ -63,6 +66,9 @@ body ._JX {
   }
 
   &_related_pr {
+    max-height: 300px;
+    overflow: auto;
+    border-bottom: 1px solid rgb(221, 228, 230);
     td {
       padding: 10px;
       border-bottom: 1px solid #dde4e6;
@@ -79,6 +85,8 @@ body ._JX {
   }
 
   &_description {
+    max-height: 600px;
+    overflow: auto;
     border-bottom: 1px solid #dde4e6;
     word-wrap: break-word;
     padding: 10px;

@@ -12,11 +12,13 @@ body ._JX {
       transition: transform 150ms !important;
       transform: translateX(-50%) !important;
     }
-    background-color: #2f2f2f;
+    background-color: #444444;
     padding: 14px 20px;
     border-radius: 50px;
     bottom: 20px;
     border: 2px solid white;
+    font-size: 16px;
+    line-height: 22px;
 
     &_icon {
       box-sizing: border-box !important;
