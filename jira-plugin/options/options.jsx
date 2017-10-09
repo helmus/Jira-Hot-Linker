@@ -28,7 +28,15 @@ async function saveOptions() {
   if (!hasPathSlash.test(instanceUrl)) {
     instanceUrl = instanceUrl + '/';
   }
+  if (instanceUrl.indexOf('://') === -1) {
+    instanceUrl = 'https://' + instanceUrl;
+  }
+  document.getElementById('instanceUrl').value = instanceUrl;
   const permissionDomains = domains.concat([instanceUrl]);
+  const currentInstanceUrl = await storageGet(defaultConfig);
+  if (!currentInstanceUrl.instanceUrl) {
+    domains.push(instanceUrl);
+  }
 
   let granted;
   try {
