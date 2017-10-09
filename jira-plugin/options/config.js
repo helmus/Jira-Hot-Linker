@@ -1,6 +1,6 @@
 export default {
   domains: [
-    '*://github.com/*'
+    'https://github.com/'
   ],
   instanceUrl: '',
   v15upgrade: false

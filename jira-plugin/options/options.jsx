@@ -69,7 +69,7 @@ function ConfigPage(props) {
     <div>
       {(() => {
         if (!props.v15upgrade) {
-          return (<label className='upgradeWarning'>Please click save to activate the new ( reduced ) permissions !
+          return (<label className='upgradeWarning'>If you recently upgraded the extension make sure to click Save to activate the new reduced permissions !
             <br/><br/></label>);
         }
       })()}
