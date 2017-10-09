@@ -15,12 +15,6 @@ const executeScript = promisifyChrome(chrome.tabs, 'executeScript');
     resetDeclarativeMapping();
   });
 
-  chrome.runtime.onMessage.addListener(function (request) {
-    if (request.type === 'open_settings') {
-      chrome.runtime.openOptionsPage();
-    }
-  });
-
   chrome.browserAction.onClicked.addListener(async function (tab) {
     const config = await storageGet(defaultConfig);
     if (!config.instanceUrl) {

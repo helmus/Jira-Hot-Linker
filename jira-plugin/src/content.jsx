@@ -47,12 +47,6 @@ async function mainAsyncLocal() {
   const draggable = require('jquery-ui/ui/widgets/draggable');
 
   const config = await getConfig();
-  if (document.location.href.startsWith('https://github.com/helmus/Jira-Hot-Linker')) {
-    $('#readme').find('a:contains(Click here to open)').on('click', (e) => {
-      e.preventDefault();
-      chrome.runtime.sendMessage({type: 'open_settings'});
-    });
-  }
   const INSTANCE_URL = config.instanceUrl;
   const jiraProjects = await $.get(await getInstanceUrl() + 'rest/api/2/project');
 
