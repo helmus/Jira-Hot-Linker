@@ -83,7 +83,7 @@ async function mainAsyncLocal() {
   function getRelativeHref(href) {
     const documentHref = document.location.href.split('#')[0];
     if (href.startsWith(documentHref)) {
-      return href.slice(0, documentHref);
+      return href.slice(0, documentHref.length);
     }
     return href;
   }
