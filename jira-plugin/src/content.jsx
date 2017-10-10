@@ -80,6 +80,13 @@ async function mainAsyncLocal() {
     return $.get(INSTANCE_URL + 'rest/api/2/issue/' + issueKey + '?fields=description,id,summary,attachment,comment,issuetype,status,priority&expand=renderedFields');
   }
 
+  function getRelativeHref(href) {
+    if (href.startsWith(document.location.href)) {
+      return href.slice(0, document.location.href);
+    }
+    return href;
+  }
+
   const container = $('<div class="_JX_container">');
   $(document.body).append(container);
   new draggable({
@@ -174,10 +181,10 @@ async function mainAsyncLocal() {
     if (element) {
       let keys = getJiraKeys(getShallowText(element));
       if (!size(keys) && element.href) {
-        keys = getJiraKeys(element.href);
+        keys = getJiraKeys(getRelativeHref(element.href));
       }
       if (!size(keys) && element.parentElement.href) {
-        keys = getJiraKeys(element.parentElement.href);
+        keys = getJiraKeys(getRelativeHref(element.parentElement.href));
       }
 
       if (size(keys)) {
