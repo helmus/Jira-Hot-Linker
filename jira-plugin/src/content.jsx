@@ -8,7 +8,7 @@ import {storageGet} from 'src/chrome';
 import {snackBar} from 'src/snack';
 import config from 'options/config.js';
 
-waitForDocument(()=>require('src/content.scss'));
+waitForDocument(() => require('src/content.scss'));
 
 const getInstanceUrl = async () => (await storageGet({
   instanceUrl: config.instanceUrl
@@ -193,7 +193,13 @@ async function mainAsyncLocal() {
         const key = keys[0];
         (async function (cancelToken) {
           const issueData = await getIssueMetaData(key);
-          const prData = await getPullRequestData(issueData.id);
+          let prData = {};
+          try {
+            prData = await getPullRequestData(issueData.id);
+          } catch (ex) {
+            // probably no access
+          }
+
           if (cancelToken.cancel) {
             return;
           }
