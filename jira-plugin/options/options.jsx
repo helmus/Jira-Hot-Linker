@@ -16,7 +16,7 @@ async function saveOptions() {
   const status = document.getElementById('status');
   const domains = document.getElementById('domains')
     .value
-    .split('\n')
+    .split(',')
     .map(x => x.trim())
     .filter(x => !!x);
   let instanceUrl = document.getElementById('instanceUrl').value.trim();
@@ -47,21 +47,24 @@ async function saveOptions() {
   }
 
   if (granted) {
-    await storageSet({instanceUrl, domains, v15upgrade:true});
+    await storageSet({instanceUrl, domains, v15upgrade: true});
     resetDeclarativeMapping();
-    status.innerHTML = '<br />Options saved.';
+    status.innerHTML = '<br />Options <strong>saved.</strong>';
     setTimeout(function () {
       status.textContent = '';
-    }, 750);
+    }, 2000);
   } else {
     status.innerHTML = '<br /> Options <strong>Not</strong> saved.';
+    return;
   }
+  document.getElementById('domains').value = domains && domains.join(', ');
+  document.getElementById('upgradeWarning').style.display = 'none';
 }
 
 async function main() {
-  ReactDOM.render(ConfigPage(
-    await storageGet(defaultConfig)
-  ), document.getElementById('container'));
+  ReactDOM.render(
+    ConfigPage(await storageGet(defaultConfig)), document.getElementById('container')
+  );
 }
 
 function ConfigPage(props) {
@@ -69,8 +72,11 @@ function ConfigPage(props) {
     <div>
       {(() => {
         if (!props.v15upgrade) {
-          return (<label className='upgradeWarning'>If you recently upgraded the extension make sure to click Save to activate the new reduced permissions !
-            <br/><br/></label>);
+          return (
+            <label id="upgradeWarning" className='upgradeWarning'>If you recently upgraded the extension make sure to
+              click Save to activate
+              the new reduced permissions !
+              <br/><br/></label>);
         }
       })()}
       <label>
@@ -84,12 +90,12 @@ function ConfigPage(props) {
       <br/>
       <br/>
       <label>
-        Domains where the plugin should be activated: <br/>
+        Locations where the plugin should be activated, comma separated: <br/>
         This can be a domain a url or any valid {' '}
         <strong><a href='https://developer.chrome.com/extensions/match_patterns'>match pattern</a>
         </strong>.
         <br/>
-        <textarea id="domains" defaultValue={props.domains && props.domains.join('\n')} placeholder="1 site per line"/>
+        <textarea id="domains" defaultValue={props.domains && props.domains.join(', ')} placeholder="1 site per line"/>
         <br/>
         You can also add new domains at any time by clicking on the extension icon !
       </label>

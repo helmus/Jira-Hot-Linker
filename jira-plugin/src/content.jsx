@@ -8,7 +8,7 @@ import {storageGet} from 'src/chrome';
 import {snackBar} from 'src/snack';
 import config from 'options/config.js';
 
-waitForDocument(() => require('src/content.scss'));
+waitForDocument(()=>require('src/content.scss'));
 
 const getInstanceUrl = async () => (await storageGet({
   instanceUrl: config.instanceUrl
@@ -240,4 +240,4 @@ async function mainAsyncLocal() {
   }, 80));
 }
 
-document.addEventListener('DOMContentLoaded', mainAsyncLocal);
+waitForDocument(mainAsyncLocal);

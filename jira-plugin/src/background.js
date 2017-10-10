@@ -4,6 +4,7 @@ import {storageGet, storageSet, permissionsRequest, promisifyChrome} from 'src/c
 import {contentScript, resetDeclarativeMapping} from 'options/declarative';
 
 const executeScript = promisifyChrome(chrome.tabs, 'executeScript');
+const sendMessage = promisifyChrome(chrome.tabs, 'sendMessage');
 
 (function () {
   chrome.runtime.onInstalled.addListener(async () => {
@@ -26,17 +27,26 @@ const executeScript = promisifyChrome(chrome.tabs, 'executeScript');
     if (granted) {
       const config = await storageGet(defaultConfig);
       if (config.domains.indexOf(origin) !== -1) {
-        chrome.tabs.sendMessage(tab.id, {
-          action: 'message',
-          message: origin + ' is already added.'
-        });
+        try {
+          await sendMessage(tab.id, {
+            action: 'message',
+            message: origin + ' is already added.'
+          });
+        } catch (ex) {
+          // extension was just installed and not injected on this tab yet
+          await executeScript(tab.id, {file: contentScript});
+          await sendMessage(tab.id, {
+            action: 'message',
+            message: 'Jira HotLinker enabled successfully !'
+          });
+        }
         return;
       }
       config.domains.push(origin);
       await storageSet(config);
       await resetDeclarativeMapping();
       await executeScript(null, {file: contentScript});
-      chrome.tabs.sendMessage(tab.id, {
+      await sendMessage(tab.id, {
         action: 'message',
         message: origin + ' added successfully !'
       });
