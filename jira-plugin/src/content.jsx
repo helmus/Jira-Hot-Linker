@@ -4,7 +4,7 @@ import debounce from 'lodash/debounce';
 import template from 'lodash/template';
 import forEach from 'lodash/forEach';
 import {centerPopup, waitForDocument} from 'src/utils';
-import {storageGet} from 'src/chrome';
+import {storageGet, storageSet} from 'src/chrome';
 import {snackBar} from 'src/snack';
 import config from 'options/config.js';
 
@@ -40,6 +40,25 @@ chrome.runtime.onMessage.addListener(function (msg) {
   if (msg.action === 'message') {
     snackBar(msg.message);
   }
+});
+
+let ui_tips_shown_local = [];
+
+async function showTip(tipName, tipMessage) {
+  if (ui_tips_shown_local.indexOf(tipName) !== -1) {
+    return;
+  }
+  ui_tips_shown_local.push(tipName);
+  const ui_tips_shown = (await storageGet({['ui_tips_shown']: []})).ui_tips_shown;
+  if (ui_tips_shown.indexOf(tipName) === -1) {
+    snackBar(tipMessage);
+    ui_tips_shown.push(tipName);
+    storageSet({'ui_tips_shown': ui_tips_shown});
+  }
+}
+
+storageGet({'ui_tips_shown': []}).then(function ({ui_tips_shown}) {
+  ui_tips_shown_local = ui_tips_shown;
 });
 
 async function mainAsyncLocal() {
@@ -83,7 +102,7 @@ async function mainAsyncLocal() {
   function getRelativeHref(href) {
     const documentHref = document.location.href.split('#')[0];
     if (href.startsWith(documentHref)) {
-      return href.slice(0, documentHref.length);
+      return href.slice(documentHref.length);
     }
     return href;
   }
@@ -176,6 +195,7 @@ async function mainAsyncLocal() {
     }
     const element = document.elementFromPoint(e.clientX, e.clientY);
     if (element === container[0] || $.contains(container[0], element)) {
+      showTip('tooltip_drag', 'Tip: You can pin the tooltip by dragging the title !');
       // cancel when hovering over the container it self
       return;
     }
@@ -251,7 +271,11 @@ async function mainAsyncLocal() {
         hideTimeOut = setTimeout(hideContainer, 250);
       }
     }
-  }, 80));
+  }, 100));
 }
 
-waitForDocument(mainAsyncLocal);
+if (!window.__JX__script_injected__) {
+  waitForDocument(mainAsyncLocal);
+}
+
+window.__JX__script_injected__ = true;

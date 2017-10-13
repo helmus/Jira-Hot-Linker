@@ -3,7 +3,7 @@ import {waitForDocument} from 'src/utils';
 
 waitForDocument(() => require('src/snack.scss'));
 
-export function snackBar(message, timeout = 3000) {
+export function snackBar(message, timeout = 6000) {
   const $ = require('jquery');
   const content = $(`
       <div class="_JX_snack">
@@ -13,11 +13,10 @@ export function snackBar(message, timeout = 3000) {
           <div class="_JX_snack_message">${message}</div>
       </div>
   `);
+  $('._JX_snack').removeClass('_JX_snack_show');
   $(document.body).append(content);
-  setTimeout(() => {
-    content.addClass('_JX_snack_show');
-    setTimeout(function () {
-      content.removeClass('_JX_snack_show').on('transitionend', () => content.remove());
-    }, timeout);
-  }, 10);
+  content.addClass('_JX_snack_show');
+  setTimeout(function () {
+    content.removeClass('_JX_snack_show').on('transitionend', () => content.remove());
+  }, timeout);
 }

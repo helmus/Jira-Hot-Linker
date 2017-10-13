@@ -1,7 +1,7 @@
 {
   "name": "Jira HotLinker",
   "description": "Jira HotLinker, quick access to Jira metadata when hovering over ticket numbers!",
-  "version": "1.5.4",
+  "version": "1.5.5",
   "manifest_version": 2,
   "icons": {
     "128": "resources/jiralink128.png"
