@@ -3,7 +3,7 @@ import size from 'lodash/size';
 import debounce from 'lodash/debounce';
 import template from 'lodash/template';
 import forEach from 'lodash/forEach';
-import {centerPopup, waitForDocument} from 'src/utils';
+import {centerPopup, waitForDocument, fetchResource} from 'src/utils';
 import {storageGet, storageSet} from 'src/chrome';
 import {snackBar} from 'src/snack';
 import config from 'options/config.js';
@@ -67,7 +67,7 @@ async function mainAsyncLocal() {
 
   const config = await getConfig();
   const INSTANCE_URL = config.instanceUrl;
-  const jiraProjects = await $.get(await getInstanceUrl() + 'rest/api/2/project');
+  const jiraProjects = await fetchResource(await getInstanceUrl() + 'rest/api/2/project');
 
   if (!size(jiraProjects)) {
     console.log('Couldn\'t find any jira projects...');
@@ -92,11 +92,11 @@ async function mainAsyncLocal() {
   }
 
   function getPullRequestData(issueId) {
-    return $.get(INSTANCE_URL + 'rest/dev-status/1.0/issue/detail?issueId=' + issueId + '&applicationType=github&dataType=pullrequest');
+    return fetchResource(INSTANCE_URL + 'rest/dev-status/1.0/issue/detail?issueId=' + issueId + '&applicationType=github&dataType=pullrequest');
   }
 
   function getIssueMetaData(issueKey) {
-    return $.get(INSTANCE_URL + 'rest/api/2/issue/' + issueKey + '?fields=description,id,summary,attachment,comment,issuetype,status,priority&expand=renderedFields');
+    return fetchResource(INSTANCE_URL + 'rest/api/2/issue/' + issueKey + '?fields=description,id,summary,attachment,comment,issuetype,status,priority&expand=renderedFields');
   }
 
   function getRelativeHref(href) {

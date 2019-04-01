@@ -52,4 +52,24 @@ const sendMessage = promisifyChrome(chrome.tabs, 'sendMessage');
       });
     }
   });
+
+  chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+
+    const $ = require('jquery');
+
+    console.log(request);
+
+    $.get(request.url, request.data)
+      .done(function(data, statusText) {
+        sendResponse([{
+            data: data,
+            status: 200,
+            statusText: statusText
+          }, null]);
+      })
+      .fail(function(error) {
+        sendResponse([null, error]);
+      });
+    return true;
+  });
 })();

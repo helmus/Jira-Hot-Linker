@@ -40,3 +40,16 @@ export function waitForDocument(cb) {
     });
   }
 }
+
+export function fetchResource(url, data) {
+  return new Promise((resolve, reject) => {
+    chrome.runtime.sendMessage({url, data}, messageResponse => {
+      const [response, error] = messageResponse;
+      if (response === null) {
+        reject(error);
+      } else {
+        resolve(response.data);
+      }
+    });
+  });
+}
