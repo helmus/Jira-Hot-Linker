@@ -57,8 +57,6 @@ const sendMessage = promisifyChrome(chrome.tabs, 'sendMessage');
 
     const $ = require('jquery');
 
-    console.log(request);
-
     $.get(request.url, request.data)
       .done(function(data, statusText) {
         sendResponse([{
