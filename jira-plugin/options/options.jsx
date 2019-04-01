@@ -88,7 +88,6 @@ function ConfigPage(props) {
           placeholder="https://your-company.atlassian.net/"/>
       </label>
       <br/>
-      <br/>
       <label>
         Locations where the plugin should be activated, comma separated: <br/>
         This can be a domain a url or any valid {' '}
@@ -100,7 +99,6 @@ function ConfigPage(props) {
         You can also add new domains at any time by clicking on the extension icon !
       </label>
       <div id='status'></div>
-      <br/>
       <br/>
       <button onClick={saveOptions} id="save">Save</button>
     </div>
