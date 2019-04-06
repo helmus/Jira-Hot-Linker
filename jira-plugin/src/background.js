@@ -2,9 +2,26 @@
 import defaultConfig from 'options/config.js';
 import {storageGet, storageSet, permissionsRequest, promisifyChrome} from 'src/chrome';
 import {contentScript, resetDeclarativeMapping} from 'options/declarative';
+import $ from 'jquery';
 
 const executeScript = promisifyChrome(chrome.tabs, 'executeScript');
 const sendMessage = promisifyChrome(chrome.tabs, 'sendMessage');
+
+var SEND_RESPONSE_IS_ASYNC=true;
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+  if (request.action === 'get') {
+    $.get(request.url).then(result => {
+      sendResponse({
+        result
+      })
+    }).catch(error => {
+      sendResponse({
+        error
+      })
+    });
+    return SEND_RESPONSE_IS_ASYNC;
+  }
+});
 
 (function () {
   chrome.runtime.onInstalled.addListener(async () => {

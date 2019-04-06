@@ -23,11 +23,13 @@ const storageGet = promisifyChrome(chrome.storage.sync, 'get');
 const storageSet = promisifyChrome(chrome.storage.sync, 'set');
 const permissionsRequest = promisifyChrome(chrome.permissions, 'request');
 const permissionsRemove = promisifyChrome(chrome.permissions, 'remove');
+const sendMessage = promisifyChrome(chrome.runtime, 'sendMessage');
 
 
 export {
   storageSet,
   storageGet,
   permissionsRequest,
-  permissionsRemove
+  permissionsRemove,
+  sendMessage,
 };

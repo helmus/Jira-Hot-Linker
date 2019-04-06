@@ -5,7 +5,7 @@
   "main": " ",
   "scripts": {
     "analyze": "webpack -p --bail --profile --json > stats.json || webpack-bundle-analyzer stats.json",
-    "dev": "webpack --watch",
+    "dev": "webpack --watch --mode=development",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -40,6 +40,7 @@
     "sass-loader": "7.1.0",
     "style-loader": "0.23.1",
     "webpack": "4.29.6",
-    "webpack-bundle-analyzer": "3.2.0"
+    "webpack-bundle-analyzer": "3.2.0",
+    "webpack-cli": "^3.3.0"
   }
 }

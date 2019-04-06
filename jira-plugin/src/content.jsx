@@ -4,7 +4,7 @@ import debounce from 'lodash/debounce';
 import template from 'lodash/template';
 import forEach from 'lodash/forEach';
 import {centerPopup, waitForDocument} from 'src/utils';
-import {storageGet, storageSet} from 'src/chrome';
+import {sendMessage, storageGet, storageSet} from 'src/chrome';
 import {snackBar} from 'src/snack';
 import config from 'options/config.js';
 
@@ -23,7 +23,7 @@ const getConfig = async () => (await storageGet(config));
  */
 function buildJiraKeyMatcher(projectKeys) {
   const projectMatches = projectKeys.join('|');
-  const jiraTicketRegex = new RegExp('(?:' + projectMatches + ')-\\d*', 'ig');
+  const jiraTicketRegex = new RegExp('(?:' + projectMatches + ')[- ]\\d*', 'ig');
 
   return function (text) {
     let matches;
@@ -61,13 +61,22 @@ storageGet({'ui_tips_shown': []}).then(function ({ui_tips_shown}) {
   ui_tips_shown_local = ui_tips_shown;
 });
 
+async function get(url) {
+  var response = await sendMessage({action: "get", url: url});
+  if (response.result) {
+    return response.result;
+  } else if (response.error) {
+    throw new Error(response.error);
+  }
+}
+
 async function mainAsyncLocal() {
   const $ = require('jquery');
   const draggable = require('jquery-ui/ui/widgets/draggable');
 
   const config = await getConfig();
   const INSTANCE_URL = config.instanceUrl;
-  const jiraProjects = await $.get(await getInstanceUrl() + 'rest/api/2/project');
+  const jiraProjects = await get(await getInstanceUrl() + 'rest/api/2/project');
 
   if (!size(jiraProjects)) {
     console.log('Couldn\'t find any jira projects...');
@@ -76,7 +85,7 @@ async function mainAsyncLocal() {
   const getJiraKeys = buildJiraKeyMatcher(jiraProjects.map(function (project) {
     return project.key;
   }));
-  const annotation = template(await $.get(chrome.extension.getURL('resources/annotation.html')));
+  const annotation = template(await get(chrome.extension.getURL('resources/annotation.html')));
   const loaderGifUrl = chrome.extension.getURL('resources/ajax-loader.gif');
 
   /***
@@ -92,11 +101,11 @@ async function mainAsyncLocal() {
   }
 
   function getPullRequestData(issueId) {
-    return $.get(INSTANCE_URL + 'rest/dev-status/1.0/issue/detail?issueId=' + issueId + '&applicationType=github&dataType=pullrequest');
+    return get(INSTANCE_URL + 'rest/dev-status/1.0/issue/detail?issueId=' + issueId + '&applicationType=github&dataType=pullrequest');
   }
 
   function getIssueMetaData(issueKey) {
-    return $.get(INSTANCE_URL + 'rest/api/2/issue/' + issueKey + '?fields=description,id,summary,attachment,comment,issuetype,status,priority&expand=renderedFields');
+    return get(INSTANCE_URL + 'rest/api/2/issue/' + issueKey + '?fields=description,id,summary,attachment,comment,issuetype,status,priority&expand=renderedFields');
   }
 
   function getRelativeHref(href) {
@@ -210,7 +219,7 @@ async function mainAsyncLocal() {
 
       if (size(keys)) {
         clearTimeout(hideTimeOut);
-        const key = keys[0];
+        const key = keys[0].replace(" ", "-");
         (async function (cancelToken) {
           const issueData = await getIssueMetaData(key);
           let prData = {};
