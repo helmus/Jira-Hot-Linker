@@ -5,6 +5,7 @@
       <excludeFolder url="file://$MODULE_DIR$/jira-plugin/build" />
       <excludeFolder url="file://$MODULE_DIR$/jira-plugin/options/build" />
     </content>
+    <content url="file://$MODULE_DIR$/jira-plugin" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
