@@ -7,10 +7,15 @@
  */
 export const promisifyChrome = (context, funcName) =>
   (...forwardedArgs) => {
+    const callSiteStack = new Error().stack;
     return new Promise((resolve, reject) => {
       forwardedArgs.push((...resolvedArgs) => {
         if (chrome.runtime.lastError) {
-          reject(chrome.runtime.lastError);
+          const err = new Error(chrome.runtime.lastError.message);
+          err.lastError = chrome.runtime.lastError;
+          //overwriting .stack actually overwrites the message to
+          err.error_stack = callSiteStack;
+          reject(err);
           return;
         }
         resolve(...resolvedArgs);

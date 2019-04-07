@@ -23,6 +23,43 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   }
 });
 
+async function browserOnClicked (tab) {
+  const config = await storageGet(defaultConfig);
+  if (!config.instanceUrl || !config.v15upgrade) {
+    chrome.runtime.openOptionsPage();
+    return;
+  }
+  const origin = new URL(tab.url).origin + '/';
+  const granted = await permissionsRequest({origins: [origin]});
+  if (granted) {
+    const config = await storageGet(defaultConfig);
+    if (config.domains.indexOf(origin) !== -1) {
+      try {
+        await sendMessage(tab.id, {
+          action: 'message',
+          message: origin + ' is already added.'
+        });
+      } catch (ex) {
+        // extension was just installed and not injected on this tab yet
+        await executeScript(tab.id, {file: contentScript});
+        await sendMessage(tab.id, {
+          action: 'message',
+          message: 'Jira HotLinker enabled successfully !'
+        });
+      }
+      return;
+    }
+    config.domains.push(origin);
+    await storageSet(config);
+    await resetDeclarativeMapping();
+    await executeScript(null, {file: contentScript});
+    await sendMessage(tab.id, {
+      action: 'message',
+      message: origin + ' added successfully !'
+    });
+  }
+}
+
 (function () {
   chrome.runtime.onInstalled.addListener(async () => {
     const config = await storageGet(defaultConfig);
@@ -33,40 +70,9 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     resetDeclarativeMapping();
   });
 
-  chrome.browserAction.onClicked.addListener(async function (tab) {
-    const config = await storageGet(defaultConfig);
-    if (!config.instanceUrl || !config.v15upgrade) {
-      chrome.runtime.openOptionsPage();
-      return;
-    }
-    const origin = new URL(tab.url).origin + '/';
-    const granted = await permissionsRequest({origins: [origin]});
-    if (granted) {
-      const config = await storageGet(defaultConfig);
-      if (config.domains.indexOf(origin) !== -1) {
-        try {
-          await sendMessage(tab.id, {
-            action: 'message',
-            message: origin + ' is already added.'
-          });
-        } catch (ex) {
-          // extension was just installed and not injected on this tab yet
-          await executeScript(tab.id, {file: contentScript});
-          await sendMessage(tab.id, {
-            action: 'message',
-            message: 'Jira HotLinker enabled successfully !'
-          });
-        }
-        return;
-      }
-      config.domains.push(origin);
-      await storageSet(config);
-      await resetDeclarativeMapping();
-      await executeScript(null, {file: contentScript});
-      await sendMessage(tab.id, {
-        action: 'message',
-        message: origin + ' added successfully !'
-      });
-    }
+  chrome.browserAction.onClicked.addListener(tab => {
+    browserOnClicked(tab).catch( (err) => {
+      console.log("Error: ", err)
+    });
   });
 })();
