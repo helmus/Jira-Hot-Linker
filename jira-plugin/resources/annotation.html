@@ -1,5 +1,15 @@
 <div class="_JX_annotation">
     <div class="_JX_title">
+        <div class="_JX_title_user"  title="Reporter -> Assignee">
+            <img title="<%- reporter.displayName %>" src="<%- reporter.avatarUrls['48x48'] %>">
+            ►
+            <img  src="<%- assignee.avatarUrls['48x48'] %>">
+        </div>
+        <div title="Issue Type">
+            <img title="<%- reporter.displayName %>" class="_JX_status_icon" src="<%- issuetype.iconUrl %>"> <%- issuetype.name %>
+        </div>
+
+
         <a href="<%- url %>"><%- urlTitle %></a>
     </div>
     <div class="_JX_status">

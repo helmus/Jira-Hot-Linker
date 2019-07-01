@@ -2,6 +2,7 @@ body ._JX {
   &_container {
     position: absolute;
     z-index: 99999;
+
     &.container-pinned {
       position: fixed !important;
     }
@@ -9,26 +10,41 @@ body ._JX {
 
   &_title {
     background-color: #F2F8FA;
-    border-bottom: 1px solid #dde4e6;
     padding: 10px 10px;
+    border: 1px solid #dde4e6;
+    display: flex;
+
+    &_user {
+      width: 100px;
+
+      img {
+        width: 15px;
+        height: 15px;
+      }
+    }
+
   }
 
   &_status {
     background-color: #F2F8FA;
     border-bottom: 1px solid #dde4e6;
     display: flex;
+
     > div, > a {
       flex-grow: 1;
       justify-content: space-evenly;
       border-right: 1px solid #dde4e6;
       padding: 5px 10px;
+
       &:last-child {
         border-right: none;
       }
     }
+
     > a {
       text-decoration: none !important;
     }
+
     ._JX_status_icon {
       position: relative;
       top: 3px;
@@ -43,6 +59,7 @@ body ._JX {
     border-radius: 3px;
     background-color: white;
     box-shadow: 2px 2px 6px rgb(162, 183, 189);
+
     &:after, &:before {
       bottom: calc(100% - 1px);
       left: 40px;
@@ -54,10 +71,12 @@ body ._JX {
       pointer-events: none;
       z-index: 5;
     }
+
     &:after {
       border: 10px rgba(242, 248, 250, 0);
       border-bottom-color: #F2F8FA;
     }
+
     &:before {
       border: 11px rgba(221, 228, 230, 0);
       border-bottom-color: #dde4e6;
@@ -69,10 +88,12 @@ body ._JX {
     max-height: 300px;
     overflow: auto;
     border-bottom: 1px solid rgb(221, 228, 230);
+
     td {
       padding: 10px;
       border-bottom: 1px solid #dde4e6;
     }
+
     table {
       width: 100%;
     }
@@ -90,6 +111,7 @@ body ._JX {
     border-bottom: 1px solid #dde4e6;
     word-wrap: break-word;
     padding: 10px;
+
     ol, ul {
       padding-left: 15px;
       margin-bottom: 15px;

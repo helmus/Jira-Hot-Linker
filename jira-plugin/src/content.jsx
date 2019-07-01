@@ -23,7 +23,7 @@ const getConfig = async () => (await storageGet(config));
  */
 function buildJiraKeyMatcher(projectKeys) {
   const projectMatches = projectKeys.join('|');
-  const jiraTicketRegex = new RegExp('(?:' + projectMatches + ')[- ]\\d*', 'ig');
+  const jiraTicketRegex = new RegExp('(?:' + projectMatches + ')[- ]\\d+', 'ig');
 
   return function (text) {
     let matches;
@@ -66,7 +66,9 @@ async function get(url) {
   if (response.result) {
     return response.result;
   } else if (response.error) {
-    throw new Error(response.error);
+    const err = new Error(response.error.statusText);
+    err.inner = response.error;
+    throw err;
   }
 }
 
@@ -105,7 +107,7 @@ async function mainAsyncLocal() {
   }
 
   function getIssueMetaData(issueKey) {
-    return get(INSTANCE_URL + 'rest/api/2/issue/' + issueKey + '?fields=description,id,summary,attachment,comment,issuetype,status,priority&expand=renderedFields');
+    return get(INSTANCE_URL + 'rest/api/2/issue/' + issueKey + '?fields=description,id,reporter,assignee,summary,attachment,comment,issuetype,status,priority&expand=renderedFields');
   }
 
   function getRelativeHref(href) {
@@ -248,6 +250,8 @@ async function mainAsyncLocal() {
             status: issueData.fields.status,
             priority: issueData.fields.priority,
             comment: issueData.fields.comment,
+            reporter: issueData.fields.reporter,
+            assignee: issueData.fields.assignee,
             comments,
             loaderGifUrl,
             size,

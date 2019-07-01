@@ -7,7 +7,7 @@ import $ from 'jquery';
 const executeScript = promisifyChrome(chrome.tabs, 'executeScript');
 const sendMessage = promisifyChrome(chrome.tabs, 'sendMessage');
 
-var SEND_RESPONSE_IS_ASYNC=true;
+var SEND_RESPONSE_IS_ASYNC = true;
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (request.action === 'get') {
     $.get(request.url).then(result => {
