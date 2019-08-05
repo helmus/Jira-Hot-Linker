@@ -27,6 +27,7 @@
     "babel-loader": "8.0.5",
     "babel-plugin-lodash": "3.3.4",
     "bluebird": "3.5.4",
+    "clipboard": "^2.0.4",
     "css-loader": "2.1.1",
     "escape-string-regexp": "1.0.5",
     "eslint": "5.16.0",

@@ -11,6 +11,17 @@ body ._JX {
     background-color: #F2F8FA;
     border-bottom: 1px solid #dde4e6;
     padding: 10px 10px;
+
+    &_copy {
+      color: #172B4D;
+      background-color: transparent;
+      border: none;
+      vertical-align: middle;
+
+      &:hover{
+        color: #8993A4;
+      }
+    }
   }
 
   &_status {
