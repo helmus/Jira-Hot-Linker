@@ -239,7 +239,7 @@ async function mainAsyncLocal() {
             ).join('\n\n');
           }
           const displayData = {
-            urlTitle: issueData.fields.summary,
+            urlTitle: key + ' ' + issueData.fields.summary,
             url: INSTANCE_URL + 'browse/' + key,
             prs: [],
             description: issueData.renderedFields.description,
