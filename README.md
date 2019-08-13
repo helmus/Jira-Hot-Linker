@@ -19,3 +19,4 @@ you can add new domains by clicking on the extension icon or in the option menu.
 - Ticket Type / Status / Priority
 - Comments
 - Pin a ticket on the screen by dragging the title
+- Copy issue key and title to clipboard
