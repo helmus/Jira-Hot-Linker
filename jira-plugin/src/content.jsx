@@ -129,7 +129,7 @@ async function mainAsyncLocal() {
     }
   })
   .on('success', e => { snackBar('Copied!');})
-  .on('error', e => { snackBar('There was an error!');})
+  .on('error', e => { snackBar('There was an error!');});
 
   $(document.body).on('click', '._JX_thumb', function previewThumb(e) {
     const currentTarget = $(e.currentTarget);
