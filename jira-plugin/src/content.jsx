@@ -102,8 +102,8 @@ async function mainAsyncLocal() {
     }).text();
   }
 
-  function getPullRequestData(issueId) {
-    return get(INSTANCE_URL + 'rest/dev-status/1.0/issue/detail?issueId=' + issueId + '&applicationType=github&dataType=pullrequest');
+  function getPullRequestData(issueId, applicationType) {
+    return get(INSTANCE_URL + 'rest/dev-status/1.0/issue/detail?issueId=' + issueId + '&applicationType=' + applicationType + '&dataType=pullrequest');
   }
 
   function getIssueMetaData(issueKey) {
@@ -224,9 +224,13 @@ async function mainAsyncLocal() {
         const key = keys[0].replace(" ", "-");
         (async function (cancelToken) {
           const issueData = await getIssueMetaData(key);
-          let prData = {};
+          let pullRequests = [];
           try {
-            prData = await getPullRequestData(issueData.id);
+            const [githubPrs, githubEnterprisePrs] = await Promise.all([
+              getPullRequestData(issueData.id, 'github'),
+              getPullRequestData(issueData.id, 'githube'),
+            ]);
+            pullRequests = githubPrs.detail[0].pullRequests.concat(githubEnterprisePrs.detail[0].pullRequests)
           } catch (ex) {
             // probably no access
           }
@@ -257,8 +261,8 @@ async function mainAsyncLocal() {
             size,
             forEach
           };
-          if (size(prData.detail)) {
-            displayData.prs = prData.detail[0].pullRequests.filter(function (pr) {
+          if (size(pullRequests)) {
+            displayData.prs = pullRequests.filter(function (pr) {
               return pr.url !== location.href;
             }).map(function (pr) {
               return {
