@@ -12,7 +12,6 @@ body ._JX {
     background-color: #F2F8FA;
     padding: 10px 10px;
     border: 1px solid #dde4e6;
-    display: flex;
 
     &_user {
       position: relative;
@@ -25,6 +24,17 @@ body ._JX {
       img {
         width: 20px;
         height: 20px;
+      }
+    }
+
+    &_copy {
+      color: #172B4D;
+      background-color: transparent;
+      border: none;
+      vertical-align: middle;
+
+      &:hover{
+        color: #8993A4;
       }
     }
 

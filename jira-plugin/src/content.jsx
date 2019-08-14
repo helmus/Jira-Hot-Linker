@@ -75,6 +75,7 @@ async function get(url) {
 async function mainAsyncLocal() {
   const $ = require('jquery');
   const draggable = require('jquery-ui/ui/widgets/draggable');
+  const clipboard = require('clipboard/dist/clipboard');
 
   const config = await getConfig();
   const INSTANCE_URL = config.instanceUrl;
@@ -123,6 +124,14 @@ async function mainAsyncLocal() {
   new draggable({
     handle: '._JX_title, ._JX_status',
   }, container);
+  
+  new clipboard('._JX_title_copy', {
+    text: function (trigger) {
+      return document.getElementById('_JX_title_link').text;
+    }
+  })
+  .on('success', e => { snackBar('Copied!');})
+  .on('error', e => { snackBar('There was an error!');});
 
   $(document.body).on('click', '._JX_thumb', function previewThumb(e) {
     const currentTarget = $(e.currentTarget);
@@ -245,7 +254,7 @@ async function mainAsyncLocal() {
             ).join('\n\n');
           }
           const displayData = {
-            urlTitle: issueData.fields.summary,
+            urlTitle: key + ' ' + issueData.fields.summary,
             url: INSTANCE_URL + 'browse/' + key,
             prs: [],
             description: issueData.renderedFields.description,
