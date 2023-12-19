@@ -9,7 +9,7 @@ body ._JX {
   }
 
   &_title {
-    background-color: #F2F8FA;
+    background-color: #f2f8fa;
     padding: 10px 10px;
     border: 1px solid #dde4e6;
     display: flex;
@@ -25,26 +25,26 @@ body ._JX {
     }
 
     &_copy {
-      color: #172B4D;
+      color: #172b4d;
       background-color: transparent;
       border: none;
       vertical-align: middle;
       position: relative;
       top: 2px;
 
-      &:hover{
-        color: #8993A4;
+      &:hover {
+        color: #8993a4;
       }
     }
-
   }
 
   &_status {
-    background-color: #F2F8FA;
+    background-color: #f2f8fa;
     border-bottom: 1px solid #dde4e6;
     display: flex;
 
-    > div, > a {
+    > div,
+    > a {
       flex-grow: 1;
       justify-content: space-evenly;
       border-right: 1px solid #dde4e6;
@@ -75,7 +75,8 @@ body ._JX {
     background-color: white;
     box-shadow: 2px 2px 6px rgb(162, 183, 189);
 
-    &:after, &:before {
+    &:after,
+    &:before {
       bottom: calc(100% - 1px);
       left: 40px;
       border: solid transparent;
@@ -89,7 +90,7 @@ body ._JX {
 
     &:after {
       border: 10px rgba(242, 248, 250, 0);
-      border-bottom-color: #F2F8FA;
+      border-bottom-color: #f2f8fa;
     }
 
     &:before {
@@ -127,7 +128,8 @@ body ._JX {
     word-wrap: break-word;
     padding: 10px;
 
-    ol, ul {
+    ol,
+    ul {
       padding-left: 15px;
       margin-bottom: 15px;
     }
@@ -200,5 +202,34 @@ body ._JX {
     top: 23%;
     left: 35%;
     position: absolute;
+  }
+}
+@media (prefers-color-scheme: dark) {
+  body ._JX {
+    &_container {
+      filter: invert(0.9) hue-rotate(180deg);
+    }
+
+    &_title_user {
+      filter: invert(1) hue-rotate(-180deg);
+    }
+
+    &_description {
+      --thumb: #686868;
+      --track: #414141;
+      scrollbar-color: var(--track) var(--thumb);
+      scrollbar-width: thin;
+
+      &::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+      }
+      &::-webkit-scrollbar-thumb {
+        background: var(--thumb);
+      }
+      &::-webkit-scrollbar-track {
+        background: var(--track);
+      }
+    }
   }
 }
