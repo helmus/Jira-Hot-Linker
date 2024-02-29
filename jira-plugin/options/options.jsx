@@ -1,4 +1,4 @@
-/*global chrome */
+///*global chrome */
 import defaultConfig from 'options/config';
 import ReactDOM from 'react-dom';
 import {storageGet, storageSet, permissionsRequest} from 'src/chrome';
@@ -14,6 +14,7 @@ window.onerror = function (msg, file, line, column, error) {
 
 async function saveOptions() {
   const status = document.getElementById('status');
+  const inlineBadge = document.getElementById('inlinebadge').checked ? true : false;
   const domains = document.getElementById('domains')
     .value
     .split(',')
@@ -47,7 +48,7 @@ async function saveOptions() {
   }
 
   if (granted) {
-    await storageSet({instanceUrl, domains, v15upgrade: true});
+    await storageSet({instanceUrl, domains, inlineBadge, v15upgrade: true});
     resetDeclarativeMapping();
     status.innerHTML = '<br />Options <strong>saved.</strong>';
     setTimeout(function () {
@@ -76,7 +77,7 @@ function ConfigPage(props) {
             <label id="upgradeWarning" className='upgradeWarning'>If you recently upgraded the extension make sure to
               click Save to activate
               the new reduced permissions !
-              <br/><br/></label>);
+            <br/><br/></label>);
         }
       })()}
       <label>
@@ -96,8 +97,14 @@ function ConfigPage(props) {
         <br/>
         <textarea id="domains" defaultValue={props.domains && props.domains.join(', ')} placeholder="1 site per line"/>
         <br/>
-        You can also add new domains at any time by clicking on the extension icon !
+        You can also add new domains at any time by clicking on the extension icon!
       </label>
+      <br/>
+      <label>
+        <input id="inlinebadge" type="checkbox" defaultChecked={props.inlineBadge}/>
+        Generate inline story badges (experimental)
+      </label>
+      <br/>
       <div id='status'></div>
       <br/>
       <button onClick={saveOptions} id="save">Save</button>
