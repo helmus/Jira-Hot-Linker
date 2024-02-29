@@ -30,6 +30,9 @@ Open this with VScode and build the devcontainer
 
 ### Building/Running local version
 
-You can build the plugin with `npx webpack-cli` and then install your local version of the plugin following this guide https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world
-
+```sh
+npm install
+npx webpack-cli
+```
+Then install your local version of the plugin following this guide https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world
 
