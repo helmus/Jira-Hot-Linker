@@ -20,3 +20,16 @@ you can add new domains by clicking on the extension icon or in the option menu.
 - Comments
 - Pin a ticket on the screen by dragging the title
 - Copy issue key and title to clipboard
+
+
+# Development
+
+## In devcontainer
+
+Open this with VScode and build the devcontainer
+
+### Building/Running local version
+
+You can build the plugin with `npx webpack-cli` and then install your local version of the plugin following this guide https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world
+
+
