@@ -1,8 +1,10 @@
-export async function renderJiraBadges(projectKeys){
+export async function renderJiraBadges(projectKeys, jiraUrl){
   if( ! projectKeys.length > 0 ){
     console.log('No project keys. Doing nothing');
     return;
   }
+
+  const $ = require('jquery');
 
   const re = new RegExp('\\b(?:' + projectKeys.join('|') + ')-\\d+\\b', 'g');
 
@@ -24,11 +26,16 @@ export async function renderJiraBadges(projectKeys){
       }
 
       // Time to build a replacement for the match
+      const key = match[0];
       const span = document.createElement('span');
-      span.className = 'jira-hotlink';
+      span.className = 'jira-hotlink-badge';
       span.append(nodeValue.substring(match.index, match.index + match[0].length ));
+
+      const jspan = $('<span class="jira-hotlink-badge"><a href="' + jiraUrl + '/browse/' + key + '">'+ key +'</a></span>');
+
       issueKeys.push(match[0]);
       fragments.push(span);
+      fragments.push(jspan.get(0));
       // We have progressed in the original string
       last_end = match.index + match[0].length;
     }
@@ -92,7 +99,13 @@ export async function renderJiraBadges(projectKeys){
   console.log('REPLACEMENTS: ', replacements);
 
   const jiraKeys = replacements.flatMap( r => { return r.issueKeys; } );
-  console.log('Must get data about ', jiraKeys); 
+  console.log('Must get data about ', jiraKeys);
+
+  let r;
+  for(r of replacements){
+    console.log(r);
+    r.replace.replaceWith.apply(r.replace, r.with);
+  }
 
   return null;
 }

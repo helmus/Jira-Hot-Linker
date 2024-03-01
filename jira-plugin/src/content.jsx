@@ -123,7 +123,7 @@ async function mainAsyncLocal() {
 
   if( config.inlineBadge ){
     console.log('Will badgify JIRA tickets starting with ',jiraProjectKeys );
-    await renderJiraBadges(jiraProjectKeys);
+    await renderJiraBadges(jiraProjectKeys, INSTANCE_URL);
   }
 
   const container = $('<div class="_JX_container">');
