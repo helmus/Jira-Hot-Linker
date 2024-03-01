@@ -3,7 +3,7 @@
  * @param {*} projectKeys The project keys for the JIRA issue keys to detect in the text 
  * @param {*} jiraUrl The URL of the JIRA instance
  * @param {*} getUrl a function that returns a promise with an object datum as a result.
- * @returns a Promise to await on.
+ * @returns a Promise to await on that renders the data from JIRA
  */
 export async function renderJiraBadges(projectKeys, jiraUrl, getUrl){
   if( ! projectKeys.length > 0 ){

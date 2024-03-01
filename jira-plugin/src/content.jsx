@@ -11,10 +11,6 @@ import {renderJiraBadges} from 'src/jirabadges.js';
 
 waitForDocument(() => require('src/content.scss'));
 
-//const getInstanceUrl = async () => (await storageGet({
-//  instanceUrl: config.instanceUrl
-//})).instanceUrl;
-
 const getConfig = async () => (await storageGet(config));
 
 /**
@@ -86,7 +82,7 @@ async function mainAsyncLocal() {
   });
 
   if (!size(jiraProjects)) {
-    console.log('Couldn\'t find any jira projects in your ');
+    console.log('Couldn\'t find any jira projects in your JIRA instance');
     return;
   }
   const getJiraKeys = buildJiraKeyMatcher(jiraProjectKeys);
@@ -122,7 +118,7 @@ async function mainAsyncLocal() {
   }
 
   if( config.inlineBadge ){
-    console.log('Will badgify JIRA tickets starting with ',jiraProjectKeys );
+    console.log('Will badgify JIRA tickets starting with ', jiraProjectKeys );
     await renderJiraBadges(jiraProjectKeys, INSTANCE_URL, get);
   }
 
