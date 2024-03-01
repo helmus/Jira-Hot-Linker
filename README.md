@@ -32,7 +32,21 @@ Open this with VScode and build the devcontainer
 
 ```sh
 npm install
-npx webpack-cli
+npx webpack-cli build --mode development
 ```
+
+Or if you want to continuously rebuild:
+
+```sh
+npx webpack-cli watch --mode development
+```
+
 Then install your local version of the plugin following this guide https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world
 
+### Building for release/production
+
+This will be much slower.
+
+```sh
+npx webpack-cli build --mode production
+```

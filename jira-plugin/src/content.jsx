@@ -7,12 +7,13 @@ import {centerPopup, waitForDocument} from 'src/utils';
 import {sendMessage, storageGet, storageSet} from 'src/chrome';
 import {snackBar} from 'src/snack';
 import config from 'options/config.js';
+import {renderJiraBadges} from 'src/jirabadges.js';
 
 waitForDocument(() => require('src/content.scss'));
 
-const getInstanceUrl = async () => (await storageGet({
-  instanceUrl: config.instanceUrl
-})).instanceUrl;
+//const getInstanceUrl = async () => (await storageGet({
+//  instanceUrl: config.instanceUrl
+//})).instanceUrl;
 
 const getConfig = async () => (await storageGet(config));
 
@@ -79,15 +80,16 @@ async function mainAsyncLocal() {
 
   const config = await getConfig();
   const INSTANCE_URL = config.instanceUrl;
-  const jiraProjects = await get(await getInstanceUrl() + 'rest/api/2/project');
+  const jiraProjects = await get(INSTANCE_URL + 'rest/api/2/project');
+  const jiraProjectKeys = jiraProjects.map(function (project) {
+    return project.key;
+  });
 
   if (!size(jiraProjects)) {
-    console.log('Couldn\'t find any jira projects...');
+    console.log('Couldn\'t find any jira projects in your ');
     return;
   }
-  const getJiraKeys = buildJiraKeyMatcher(jiraProjects.map(function (project) {
-    return project.key;
-  }));
+  const getJiraKeys = buildJiraKeyMatcher(jiraProjectKeys);
   const annotation = template(await get(chrome.extension.getURL('resources/annotation.html')));
   const loaderGifUrl = chrome.extension.getURL('resources/ajax-loader.gif');
 
@@ -117,6 +119,11 @@ async function mainAsyncLocal() {
       return href.slice(documentHref.length);
     }
     return href;
+  }
+
+  if( config.inlineBadge ){
+    console.log('Will badgify JIRA tickets starting with ',jiraProjectKeys );
+    await renderJiraBadges(jiraProjectKeys);
   }
 
   const container = $('<div class="_JX_container">');
