@@ -1,4 +1,4 @@
-/*global chrome */
+///*global chrome */
 import size from 'lodash/size';
 import debounce from 'lodash/debounce';
 import template from 'lodash/template';
@@ -62,7 +62,7 @@ storageGet({'ui_tips_shown': []}).then(function ({ui_tips_shown}) {
 });
 
 async function get(url) {
-  var response = await sendMessage({action: "get", url: url});
+  var response = await sendMessage({action: 'get', url: url});
   if (response.result) {
     return response.result;
   } else if (response.error) {
@@ -126,12 +126,12 @@ async function mainAsyncLocal() {
   }, container);
   
   new clipboard('._JX_title_copy', {
-    text: function (trigger) {
+    text: function () {
       return document.getElementById('_JX_title_link').text;
     }
   })
-  .on('success', e => { snackBar('Copied!');})
-  .on('error', e => { snackBar('There was an error!');});
+    .on('success', () => { snackBar('Copied!');})
+    .on('error', (e) => { snackBar('There was an error!'); console.error(e);});
 
   $(document.body).on('click', '._JX_thumb', function previewThumb(e) {
     const currentTarget = $(e.currentTarget);
@@ -230,7 +230,7 @@ async function mainAsyncLocal() {
 
       if (size(keys)) {
         clearTimeout(hideTimeOut);
-        const key = keys[0].replace(" ", "-");
+        const key = keys[0].replace(' ', '-');
         (async function (cancelToken) {
           const issueData = await getIssueMetaData(key);
           let pullRequests = [];
@@ -239,7 +239,7 @@ async function mainAsyncLocal() {
               getPullRequestData(issueData.id, 'github'),
               getPullRequestData(issueData.id, 'githube'),
             ]);
-            pullRequests = githubPrs.detail[0].pullRequests.concat(githubEnterprisePrs.detail[0].pullRequests)
+            pullRequests = githubPrs.detail[0].pullRequests.concat(githubEnterprisePrs.detail[0].pullRequests);
           } catch (ex) {
             // probably no access
           }
