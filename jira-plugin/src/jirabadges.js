@@ -1,4 +1,11 @@
-export async function renderJiraBadges(projectKeys, jiraUrl){
+/**
+ * 
+ * @param {*} projectKeys The project keys for the JIRA issue keys to detect in the text 
+ * @param {*} jiraUrl The URL of the JIRA instance
+ * @param {*} getUrl a function that returns a promise with an object datum as a result.
+ * @returns a Promise to await on.
+ */
+export async function renderJiraBadges(projectKeys, jiraUrl, getUrl){
   if( ! projectKeys.length > 0 ){
     console.log('No project keys. Doing nothing');
     return;
@@ -27,14 +34,9 @@ export async function renderJiraBadges(projectKeys, jiraUrl){
 
       // Time to build a replacement for the match
       const key = match[0];
-      const span = document.createElement('span');
-      span.className = 'jira-hotlink-badge';
-      span.append(nodeValue.substring(match.index, match.index + match[0].length ));
-
-      const jspan = $('<span class="jira-hotlink-badge"><a href="' + jiraUrl + '/browse/' + key + '">'+ key +'</a></span>');
+      const jspan = $('<span class="jira-' + key + ' jira-hotlink-badge"><a href="' + jiraUrl + '/browse/' + key + '">'+ key +'</a></span>');
 
       issueKeys.push(match[0]);
-      fragments.push(span);
       fragments.push(jspan.get(0));
       // We have progressed in the original string
       last_end = match.index + match[0].length;
@@ -68,13 +70,11 @@ export async function renderJiraBadges(projectKeys, jiraUrl){
     'A': true,
   };
 
-  console.log('Rendering JIRA badges');
   // Scan all elements in the page.
   var elements = document.createNodeIterator(
     document.body,
     NodeFilter.SHOW_ELEMENT,
     (e) => {
-      // return NodeFilter.FILTER_ACCEPT;
       return ignore_elements[( e.tagName  || '' ).toUpperCase()]  ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT;
     }
   );
@@ -96,16 +96,35 @@ export async function renderJiraBadges(projectKeys, jiraUrl){
       }
     }
   }
-  console.log('REPLACEMENTS: ', replacements);
-
-  const jiraKeys = replacements.flatMap( r => { return r.issueKeys; } );
-  console.log('Must get data about ', jiraKeys);
 
   let r;
   for(r of replacements){
-    console.log(r);
     r.replace.replaceWith.apply(r.replace, r.with);
   }
 
-  return null;
+
+  // Build all promises of data filling
+  function getShortMetaData(issueKey) {
+    return getUrl(jiraUrl + 'rest/api/2/issue/' + issueKey + '?fields=id,summary,issuetype,status,priority&expand=renderedFields');
+  }
+  const dataPromise = Promise.allSettled(
+    replacements
+      .flatMap( r => { return r.issueKeys; } )
+      .filter((v,i,a)=>a.indexOf(v)==i) // No duplicates please.
+      .map( k => { return getShortMetaData(k); })
+      .map( dp => { return dp.then( r => {
+        const thespans = $('.jira-' + r.key);
+        const summary = $('<span class="summary" />');
+        const status  = $('<span class="status" />');
+        summary.append(r.fields.summary);
+        status.append(r.fields.status.name);
+        status.addClass( r.fields.status.statusCategory.colorName );
+        thespans.append(summary);
+        thespans.append(status);
+        return null;
+      });
+      })
+  );
+
+  return dataPromise;
 }

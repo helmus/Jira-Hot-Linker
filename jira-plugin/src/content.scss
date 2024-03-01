@@ -1,5 +1,32 @@
 span.jira-hotlink-badge{
-  background-color: #14892c;
+  background-color: #f2f8fa;
+  border: solid 2px;
+  padding: 5px 10px;
+  border-color:  #dde4e6;
+  border-radius: 5px;
+  display: inline-block;
+  a{
+    font-weight: bold;
+  }
+  span{
+    margin-left: 10px;
+  }
+  span.status{
+    font-weight: bold;
+    background-color: white;
+    padding: 3px 7px;
+    border-radius: 3px;
+  }
+  span.status.blue-gray{
+    color: lightblue;
+  }
+  span.status.yellow{
+    color: darkorange;
+  }
+  span.status.green{
+    color: #14892c;
+  }
+  
 }
 
 body ._JX {
