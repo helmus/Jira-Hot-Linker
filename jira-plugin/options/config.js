@@ -3,6 +3,7 @@ export default {
     'https://github.com/'
   ],
   instanceUrl: '',
+  inlineBadge: false,
   v15upgrade: false
 };
 
