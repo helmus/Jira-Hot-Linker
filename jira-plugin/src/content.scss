@@ -1,7 +1,8 @@
 span.jira-hotlink-badge{
   background-color: #f2f8fa;
   border: solid 2px;
-  padding: 5px 10px;
+  padding: 0.1em 0.25em;
+  color: #3b2328;
   border-color:  #dde4e6;
   border-radius: 5px;
   display: inline-block;
@@ -9,12 +10,12 @@ span.jira-hotlink-badge{
     font-weight: bold;
   }
   span{
-    margin-left: 10px;
+    margin-left: 0.6em;
   }
   span.status{
     font-weight: bold;
     background-color: white;
-    padding: 3px 7px;
+    padding: 0.05em 0.1em;
     border-radius: 3px;
   }
   span.status.blue-gray{
@@ -236,6 +237,11 @@ body ._JX {
   }
 }
 @media (prefers-color-scheme: dark) {
+
+  span.jira-hotlink-badge{
+    filter: invert(0.9) hue-rotate(180deg);
+  }
+
   body ._JX {
     &_container {
       filter: invert(0.9) hue-rotate(180deg);
