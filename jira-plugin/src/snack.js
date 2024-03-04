@@ -1,4 +1,4 @@
-/*global chrome */
+///*global chrome */
 import {waitForDocument} from 'src/utils';
 
 waitForDocument(() => require('src/snack.scss'));

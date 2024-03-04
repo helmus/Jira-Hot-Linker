@@ -1,4 +1,4 @@
-/*global chrome */
+///*global chrome */
 import size from 'lodash/size';
 import debounce from 'lodash/debounce';
 import template from 'lodash/template';
@@ -7,12 +7,9 @@ import {centerPopup, waitForDocument} from 'src/utils';
 import {sendMessage, storageGet, storageSet} from 'src/chrome';
 import {snackBar} from 'src/snack';
 import config from 'options/config.js';
+import {renderJiraBadges} from 'src/jirabadges.js';
 
 waitForDocument(() => require('src/content.scss'));
-
-const getInstanceUrl = async () => (await storageGet({
-  instanceUrl: config.instanceUrl
-})).instanceUrl;
 
 const getConfig = async () => (await storageGet(config));
 
@@ -62,7 +59,7 @@ storageGet({'ui_tips_shown': []}).then(function ({ui_tips_shown}) {
 });
 
 async function get(url) {
-  var response = await sendMessage({action: "get", url: url});
+  var response = await sendMessage({action: 'get', url: url});
   if (response.result) {
     return response.result;
   } else if (response.error) {
@@ -79,15 +76,16 @@ async function mainAsyncLocal() {
 
   const config = await getConfig();
   const INSTANCE_URL = config.instanceUrl;
-  const jiraProjects = await get(await getInstanceUrl() + 'rest/api/2/project');
+  const jiraProjects = await get(INSTANCE_URL + 'rest/api/2/project');
+  const jiraProjectKeys = jiraProjects.map(function (project) {
+    return project.key;
+  });
 
   if (!size(jiraProjects)) {
-    console.log('Couldn\'t find any jira projects...');
+    console.log('Couldn\'t find any jira projects in your JIRA instance');
     return;
   }
-  const getJiraKeys = buildJiraKeyMatcher(jiraProjects.map(function (project) {
-    return project.key;
-  }));
+  const getJiraKeys = buildJiraKeyMatcher(jiraProjectKeys);
   const annotation = template(await get(chrome.extension.getURL('resources/annotation.html')));
   const loaderGifUrl = chrome.extension.getURL('resources/ajax-loader.gif');
 
@@ -119,6 +117,11 @@ async function mainAsyncLocal() {
     return href;
   }
 
+  if( config.inlineBadge ){
+    console.log('Will badgify JIRA tickets starting with ', jiraProjectKeys );
+    await renderJiraBadges(jiraProjectKeys, INSTANCE_URL, get);
+  }
+
   const container = $('<div class="_JX_container">');
   $(document.body).append(container);
   new draggable({
@@ -126,12 +129,12 @@ async function mainAsyncLocal() {
   }, container);
   
   new clipboard('._JX_title_copy', {
-    text: function (trigger) {
+    text: function () {
       return document.getElementById('_JX_title_link').text;
     }
   })
-  .on('success', e => { snackBar('Copied!');})
-  .on('error', e => { snackBar('There was an error!');});
+    .on('success', () => { snackBar('Copied!');})
+    .on('error', (e) => { snackBar('There was an error!'); console.error(e);});
 
   $(document.body).on('click', '._JX_thumb', function previewThumb(e) {
     const currentTarget = $(e.currentTarget);
@@ -230,7 +233,7 @@ async function mainAsyncLocal() {
 
       if (size(keys)) {
         clearTimeout(hideTimeOut);
-        const key = keys[0].replace(" ", "-");
+        const key = keys[0].replace(' ', '-');
         (async function (cancelToken) {
           const issueData = await getIssueMetaData(key);
           let pullRequests = [];
@@ -239,7 +242,7 @@ async function mainAsyncLocal() {
               getPullRequestData(issueData.id, 'github'),
               getPullRequestData(issueData.id, 'githube'),
             ]);
-            pullRequests = githubPrs.detail[0].pullRequests.concat(githubEnterprisePrs.detail[0].pullRequests)
+            pullRequests = githubPrs.detail[0].pullRequests.concat(githubEnterprisePrs.detail[0].pullRequests);
           } catch (ex) {
             // probably no access
           }
