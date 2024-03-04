@@ -1,3 +1,7 @@
+.gh-header-meta .commit-ref .css-truncate-target{
+  vertical-align: middle !important;
+}
+
 span.jira-hotlink-badge{
   background-color: #f2f8fa;
   border: solid 2px;
@@ -6,6 +10,8 @@ span.jira-hotlink-badge{
   border-color:  #dde4e6;
   border-radius: 5px;
   display: inline-block;
+  position: relative;
+  vertical-align: middle;
   a{
     font-weight: bold;
   }
