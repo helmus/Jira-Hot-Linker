@@ -103,7 +103,7 @@ async function mainAsyncLocal() {
   }
 
   function getPullRequestData(issueId, applicationType) {
-    return get(INSTANCE_URL + 'rest/dev-status/1.0/issue/detail?issueId=' + issueId + '&applicationType=' + applicationType + '&dataType=pullrequest');
+    return get(INSTANCE_URL + 'rest/dev-status/1.0/issue/details?issueId=' + issueId + '&applicationType=' + applicationType + '&dataType=pullrequest');
   }
 
   function getIssueMetaData(issueKey) {
@@ -234,11 +234,8 @@ async function mainAsyncLocal() {
           const issueData = await getIssueMetaData(key);
           let pullRequests = [];
           try {
-            const [githubPrs, githubEnterprisePrs] = await Promise.all([
-              getPullRequestData(issueData.id, 'github'),
-              getPullRequestData(issueData.id, 'githube'),
-            ]);
-            pullRequests = githubPrs.detail[0].pullRequests.concat(githubEnterprisePrs.detail[0].pullRequests)
+            const githubPrs = await getPullRequestData(issueData.id, 'github');
+            pullRequests = githubPrs.detail[0].pullRequests;
           } catch (ex) {
             // probably no access
           }
@@ -268,6 +265,7 @@ async function mainAsyncLocal() {
             commentUrl: '',
             loaderGifUrl,
           };
+          displayData.commentUrl = `${displayData.url}#comment-${displayData.comment?.comments?.[0]?.id || ''}`;
           if (size(pullRequests)) {
             displayData.prs = pullRequests.filter(function (pr) {
               return pr.url !== location.href;
