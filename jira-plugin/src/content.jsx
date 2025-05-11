@@ -66,7 +66,7 @@ async function get(url) {
   if (response.result) {
     return response.result;
   } else if (response.error) {
-    const err = new Error(response.error.statusText);
+    const err = new Error(response.error);
     err.inner = response.error;
     throw err;
   }

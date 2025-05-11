@@ -2,7 +2,6 @@
 import defaultConfig from 'options/config.js';
 import {storageGet, storageSet, permissionsRequest, promisifyChrome} from 'src/chrome';
 import {contentScript, resetDeclarativeMapping} from 'options/declarative';
-import $ from 'jquery';
 
 const executeScript = promisifyChrome(chrome.scripting, 'executeScript');
 const sendMessage = promisifyChrome(chrome.tabs, 'sendMessage');
@@ -10,15 +9,24 @@ const sendMessage = promisifyChrome(chrome.tabs, 'sendMessage');
 var SEND_RESPONSE_IS_ASYNC = true;
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (request.action === 'get') {
-    $.get(request.url).then(result => {
-      sendResponse({
-        result
+    fetch(request.url)
+      .then(async response => {
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status} – ${response.statusText}`);
+        }
+
+        const contentType = response.headers.get('Content-Type') || '';
+        const isJson = contentType.includes('application/json');
+
+        const result = isJson
+          ? await response.json()
+          : await response.text();
+        console.log('result', result);
+        sendResponse({ result });
       })
-    }).catch(error => {
-      sendResponse({
-        error
-      })
-    });
+      .catch(error => {
+        sendResponse({ error: error.message });
+      });
     return SEND_RESPONSE_IS_ASYNC;
   }
 });
