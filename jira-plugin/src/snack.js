@@ -8,7 +8,7 @@ export function snackBar(message, timeout = 6000) {
   const content = $(`
       <div class="_JX_snack">
           <div class="_JX_snack_icon">
-            <img src="${chrome.extension.getURL('resources/jiralink128.png')}" class="_JX_snack_icon_img" />
+            <img src="${chrome.runtime.getURL('resources/jiralink128.png')}" class="_JX_snack_icon_img" />
           </div>
           <div class="_JX_snack_message">${message}</div>
       </div>

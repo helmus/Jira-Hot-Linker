@@ -156,7 +156,7 @@ async function mainAsyncLocal() {
       if (localCancelToken.cancel) {
         return;
       }
-      centerPopup(chrome.extension.getURL(`resources/preview.html?url=${currentTarget.data('url')}&title=${name}`), name, {
+      centerPopup(chrome.runtime.getURL(`resources/preview.html?url=${currentTarget.data('url')}&title=${name}`), name, {
         width: this.naturalWidth,
         height: this.naturalHeight
       }).focus();
