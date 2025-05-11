@@ -21,7 +21,6 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         const result = isJson
           ? await response.json()
           : await response.text();
-        console.log('result', result);
         sendResponse({ result });
       })
       .catch(error => {
