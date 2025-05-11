@@ -1,8 +1,7 @@
 /*global chrome */
 import size from 'lodash/size';
 import debounce from 'lodash/debounce';
-import template from 'lodash/template';
-import forEach from 'lodash/forEach';
+import Mustache from 'mustache';
 import {centerPopup, waitForDocument} from 'src/utils';
 import {sendMessage, storageGet, storageSet} from 'src/chrome';
 import {snackBar} from 'src/snack';
@@ -88,8 +87,8 @@ async function mainAsyncLocal() {
   const getJiraKeys = buildJiraKeyMatcher(jiraProjects.map(function (project) {
     return project.key;
   }));
-  const annotation = template(await get(chrome.extension.getURL('resources/annotation.html')));
-  const loaderGifUrl = chrome.extension.getURL('resources/ajax-loader.gif');
+  const annotationTemplate = await get(chrome.runtime.getURL('resources/annotation.html'));
+  const loaderGifUrl = chrome.runtime.getURL('resources/ajax-loader.gif');
 
   /***
    * Retrieve only the text that is directly owned by the node
@@ -266,9 +265,8 @@ async function mainAsyncLocal() {
             reporter: issueData.fields.reporter,
             assignee: issueData.fields.assignee,
             comments,
+            commentUrl: '',
             loaderGifUrl,
-            size,
-            forEach
           };
           if (size(pullRequests)) {
             displayData.prs = pullRequests.filter(function (pr) {
@@ -288,7 +286,7 @@ async function mainAsyncLocal() {
             left: e.pageX + 20,
             top: e.pageY + 25
           };
-          container.html(annotation(displayData));
+          container.html(Mustache.render(annotationTemplate, displayData));
           if (!containerPinned) {
             container.css(css);
           }
