@@ -1,8 +1,7 @@
 /*global chrome */
 import size from 'lodash/size';
 import debounce from 'lodash/debounce';
-import template from 'lodash/template';
-import forEach from 'lodash/forEach';
+import Mustache from 'mustache';
 import {centerPopup, waitForDocument} from 'src/utils';
 import {sendMessage, storageGet, storageSet} from 'src/chrome';
 import {snackBar} from 'src/snack';
@@ -66,7 +65,7 @@ async function get(url) {
   if (response.result) {
     return response.result;
   } else if (response.error) {
-    const err = new Error(response.error.statusText);
+    const err = new Error(response.error);
     err.inner = response.error;
     throw err;
   }
@@ -88,8 +87,8 @@ async function mainAsyncLocal() {
   const getJiraKeys = buildJiraKeyMatcher(jiraProjects.map(function (project) {
     return project.key;
   }));
-  const annotation = template(await get(chrome.extension.getURL('resources/annotation.html')));
-  const loaderGifUrl = chrome.extension.getURL('resources/ajax-loader.gif');
+  const annotationTemplate = await get(chrome.runtime.getURL('resources/annotation.html'));
+  const loaderGifUrl = chrome.runtime.getURL('resources/ajax-loader.gif');
 
   /***
    * Retrieve only the text that is directly owned by the node
@@ -104,7 +103,7 @@ async function mainAsyncLocal() {
   }
 
   function getPullRequestData(issueId, applicationType) {
-    return get(INSTANCE_URL + 'rest/dev-status/1.0/issue/detail?issueId=' + issueId + '&applicationType=' + applicationType + '&dataType=pullrequest');
+    return get(INSTANCE_URL + 'rest/dev-status/1.0/issue/details?issueId=' + issueId + '&applicationType=' + applicationType + '&dataType=pullrequest');
   }
 
   function getIssueMetaData(issueKey) {
@@ -156,7 +155,7 @@ async function mainAsyncLocal() {
       if (localCancelToken.cancel) {
         return;
       }
-      centerPopup(chrome.extension.getURL(`resources/preview.html?url=${currentTarget.data('url')}&title=${name}`), name, {
+      centerPopup(chrome.runtime.getURL(`resources/preview.html?url=${currentTarget.data('url')}&title=${name}`), name, {
         width: this.naturalWidth,
         height: this.naturalHeight
       }).focus();
@@ -235,11 +234,8 @@ async function mainAsyncLocal() {
           const issueData = await getIssueMetaData(key);
           let pullRequests = [];
           try {
-            const [githubPrs, githubEnterprisePrs] = await Promise.all([
-              getPullRequestData(issueData.id, 'github'),
-              getPullRequestData(issueData.id, 'githube'),
-            ]);
-            pullRequests = githubPrs.detail[0].pullRequests.concat(githubEnterprisePrs.detail[0].pullRequests)
+            const githubPrs = await getPullRequestData(issueData.id, 'github');
+            pullRequests = githubPrs.detail[0].pullRequests;
           } catch (ex) {
             // probably no access
           }
@@ -266,10 +262,10 @@ async function mainAsyncLocal() {
             reporter: issueData.fields.reporter,
             assignee: issueData.fields.assignee,
             comments,
+            commentUrl: '',
             loaderGifUrl,
-            size,
-            forEach
           };
+          displayData.commentUrl = `${displayData.url}#comment-${displayData.comment?.comments?.[0]?.id || ''}`;
           if (size(pullRequests)) {
             displayData.prs = pullRequests.filter(function (pr) {
               return pr.url !== location.href;
@@ -288,7 +284,7 @@ async function mainAsyncLocal() {
             left: e.pageX + 20,
             top: e.pageY + 25
           };
-          container.html(annotation(displayData));
+          container.html(Mustache.render(annotationTemplate, displayData));
           if (!containerPinned) {
             container.css(css);
           }
