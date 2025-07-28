@@ -24,9 +24,7 @@
   "permissions": [
     "activeTab",
     "declarativeContent",
-    "storage",
-    "scripting",
-    "declarativeNetRequest"
+    "storage"
   ],
   "options_ui": {
     "page": "options/options.html"
