@@ -249,12 +249,12 @@ async function mainAsyncLocal() {
               comment => comment.author.displayName + ':\n' + comment.body
             ).join('\n\n');
           }
-          const hasParent = issueData.fields.parent;
+          const parent = issueData.fields.parent;
           const displayData = {
             urlTitle: key + ' ' + issueData.fields.summary,
             url: INSTANCE_URL + 'browse/' + key,
-            parentUrlTitle: hasParent ? issueData.fields.parent.key + ' ' + issueData.fields.parent.fields.summary : null,
-            parentUrl: hasParent ? INSTANCE_URL + 'browse/' + issueData.fields.parent.key : null,
+            parentUrlTitle: parent ? parent.key + ' ' + parent.fields.summary : null,
+            parentUrl: parent ? INSTANCE_URL + 'browse/' + parent.key : null,
             prs: [],
             description: issueData.renderedFields.description,
             attachments: issueData.fields.attachment,
