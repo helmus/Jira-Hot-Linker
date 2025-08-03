@@ -38,6 +38,14 @@ body ._JX {
     }
   }
 
+  &_parent_title {
+    background-color: #f2f8fa;
+    padding: 5px 5px;
+    display: flex;
+    font-size: smaller;
+    border-bottom: 1px solid #dde4e6;
+  }
+
   &_status {
     background-color: #f2f8fa;
     border-bottom: 1px solid #dde4e6;
